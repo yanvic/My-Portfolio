@@ -1,13 +1,19 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-import Hello from '../components/Hello.jsx';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Page from '../components/Pages.jsx';
+import "../styles/global.css"
 ---
 
-<Layout>
-	<Hello />
-	<Welcome />
-</Layout>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <titlev>My Portfolio</title>
+  </head>
+  <body>
+    <Page client:load />
+    <div>Descricao</div>
+    <div>Projetos</div>
+    <div>Sobre mim além da programação </div>
+    <div>Links de contato </div>
+  </body>
+</html>
+

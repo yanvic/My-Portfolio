@@ -12,23 +12,26 @@ export default function Navbar({
   const t = translations[lang];
 
   return (
-    <nav className="navbar">
-      <ul className="navbar-list">
-        <li><a href="#home">{t.home}</a></li>
-        <li><a href="#projects">{t.projects}</a></li>
-        <li><a href="#about">{t.about}</a></li>
-        <li><a href="#blog">{t.blog}</a></li>
-      </ul>
+    <div className="header">
+  <nav className="navbar">
+    <ul className="navbar-list">
+      <li><a href="#home">{t.home}</a></li>
+      <li><a href="#projects">{t.projects}</a></li>
+      <li><a href="#about">{t.about}</a></li>
+      <li><a href="#blog">{t.blog}</a></li>
+    </ul>
+  </nav>
 
-      <div className="navbar-actions">
-        <button onClick={() => setDark(!dark)}>
-          {dark ? "🌞" : "🌙"}
-        </button>
+  <div className="navbar-actions">
+    <button onClick={() => setDark(!dark)}>
+      {dark ? "🌞" : "🌙"}
+    </button>
 
-        <button onClick={() => setLang(lang === "en" ? "pt" : "en")}>
-          {lang === "en" ? "🇺🇸" : "🇧🇷"}
-        </button>
-      </div>
-    </nav>
+    <button onClick={() => setLang(lang === "en" ? "pt" : "en")}>
+      {lang === "en" ? "🇺🇸" : "🇧🇷"}
+    </button>
+  </div>
+</div>
+
   );
 }
