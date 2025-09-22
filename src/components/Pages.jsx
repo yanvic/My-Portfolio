@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar.jsx";
+import Hero from "./Hero.jsx";
 import MainContent from "./Main.jsx";
 
 export default function Page() {
@@ -16,6 +17,7 @@ export default function Page() {
   return (
     <>
       <Navbar lang={lang} setLang={setLang} dark={dark} setDark={setDark} />
+      <Hero lang={lang} setLang={setLang} dark={dark} setDark={setDark} />
       <MainContent lang={lang} />
     </>
   );
