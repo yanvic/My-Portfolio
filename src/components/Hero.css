@@ -1,0 +1,107 @@
+.hero {
+    height: 50vh;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  .hero[data-theme="light"] {
+    --bg-radial: radial-gradient(circle at center, #ffffff 0%, #e5e7eb 20%, #ffffff 60%);
+    --tri-opacity: 0.35;
+  }
+  
+  .hero[data-theme="dark"] {
+    --bg-radial: radial-gradient(circle at center, #111827 0%, #020617 30%, #000 65%);
+    --tri-opacity: 0.6;
+  }
+ 
+  .wrap {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    perspective: 800px;
+    height: 70vh;
+    overflow: hidden;
+    contain: layout paint size;  
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      black 0%,
+      black 85%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      black 0%,
+      black 85%,
+      transparent 100%
+    );
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-btn {
+    z-index: 1;
+    height: 100%;
+  }
+
+  .tri {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+  
+    border-top: var(--size) solid hsl(
+      calc(var(--i, 1) * 3),
+      100%,
+      60%
+    );
+    border-left: var(--size) solid transparent;
+    border-right: var(--size) solid transparent;
+  
+    margin-left: calc(var(--size) / -2);
+    margin-top: calc(var(--size) / -2);
+  
+    filter: grayscale(1);
+    opacity: 0;
+  
+    transform:
+      translate3d(var(--x), var(--y), var(--z))
+      rotate(var(--r))
+      scale(0);
+  
+    animation: fly 10s linear infinite;
+    animation-delay: var(--d);
+  }
+  
+  @keyframes fly {
+    0% {
+      opacity: var(--tri-opacity);
+      transform:
+        translate3d(var(--x), var(--y), 1000px)
+        rotate(calc(var(--r) * 1.5))
+        scale(1);
+    }
+  }
+  
+
+  @media (prefers-reduced-motion: reduce) {
+    .tri {
+      animation: none;
+    }
+  }
