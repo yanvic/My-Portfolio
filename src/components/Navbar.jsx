@@ -13,7 +13,7 @@ export default function Navbar({
 
   return (
     <div className="header">
-  <nav className="navbar">
+    <nav className="navbar">
     <ul className="navbar-list">
       <li><a href="#home">{t.home}</a></li>
       <li><a href="#projects">{t.projects}</a></li>

@@ -1,15 +1,9 @@
   .header {
     display: flex;
-    /* justify-content: space-between; */
+    margin-bottom: 40px;
     align-items: center;
     justify-content: center;
     position: flex;
-    /* top: 20px;s
-    left: 50%; */
-    /* transform: translateX(-50%); */
-    /* width: 90%; */
-    /* max-width: 1200px;    
-    min-width: 350px; */
     z-index: 1000;
   }
   
@@ -56,6 +50,8 @@
     gap: 10px;
     margin-left: 15px;
     align-items: center;
+    position: flex;
+    z-index: 1000;
   }
   
   .action-button {
