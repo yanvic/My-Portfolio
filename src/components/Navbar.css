@@ -7,7 +7,9 @@
     z-index: 1000;
   }
   
-  .navbar {
+  .navbar {  
+    background-color: var(--color-primary);
+    color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,10 +21,21 @@
     min-width: 300px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.1);
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.85);
+    /* background: rgba(255, 255, 255, 0.85); */
     backdrop-filter: blur(10px);
   }
-  
+
+  .navbar a {
+    color: var(--color-secondary);
+    text-decoration: none;
+    margin: 0 1rem;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: var(--color-tertiary);
+}
+
   .navbar-list {
     list-style: none;
     display: flex;
