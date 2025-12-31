@@ -3,6 +3,7 @@
     --color-secondary: #ff6600;
     --bg-color: #ffffff;
     --text-color: #111111;
+    --card-bg: #fff;
   }
   
   [data-theme="light"] {
