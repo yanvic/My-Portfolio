@@ -1,0 +1,130 @@
+.timeline {
+    position: relative;
+    width: 600px;
+    height: 240px;
+    margin: 0 auto;
+  }
+  
+  .timeline-line {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }  
+  
+  
+  .timeline-line path {
+    fill: none;
+    stroke: #7c6cff;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 2.2s ease forwards;
+  }
+  
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .point {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+  
+  
+  /* Coordenadas alinhadas ao path */
+  .p1 {
+    left: 20px;
+    top: 155px;
+  }
+  
+  .p2 {
+    left: 170px;
+    top: 150px;
+  }
+  
+  .p3 {
+    left: 340px;
+    top: 155px;
+  }
+
+  .p4 {
+    left: 580px;
+    top: 155px;
+  }
+
+  .dot {
+    display: block;
+    width: 12px;
+    height: 12px;
+    background: #7c6cff;
+    border-radius: 50%;
+    margin: auto;
+    transition: transform 0.25s ease;
+  }
+  
+  .point:hover .dot {
+    transform: scale(1.4);
+  }
+  
+  
+  
+  .card {
+    position: absolute;
+    top: 50%;
+    left: 140%;
+    transform: translateY(-50%) translateX(-10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.35s ease;
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 14px;
+    border-radius: 10px;
+    width: 220px;
+  }  
+  
+  .point:hover .card {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+    pointer-events: auto;
+  }  
+  
+  .card small {
+    color: #9a92ff;
+    font-size: 0.7rem;
+  }
+  
+  .card h3 {
+    font-size: 0.9rem;
+    margin: 4px 0;
+  }
+  
+  .card p {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #cfcfe0;
+  }
+  
+  /* BADGES */
+  .badges {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .badges span {
+    font-size: 0.65rem;
+    padding: 3px 7px;
+    border-radius: 999px;
+    border: 1px solid #7c6cff55;
+    color: #dcd9ff;
+  }
+  
