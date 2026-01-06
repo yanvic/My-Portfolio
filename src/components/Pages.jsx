@@ -6,7 +6,6 @@ import About from "./About.jsx";
 import Hobbies from "./Hobbies.jsx";
 import Footer from "./Footer.jsx";
 
-
 export default function Page() {
   const [lang, setLang] = useState("en");
   const [dark, setDark] = useState(false);

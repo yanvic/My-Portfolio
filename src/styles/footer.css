@@ -2,18 +2,16 @@
     position: relative;
     height: 100%;
     padding: 4rem 1rem;
-    color: #fff;
+    color: var(--text-color);
     overflow: hidden;
   }
   
   .footer__overlay {
     position: absolute;
     inset: 0;
-    /* background: rgba(0, 0, 0, 0.55); */
     z-index: 1;
   }
   
-  /* Conteúdo */
   .footer__content {
     position: relative;
     z-index: 2;
@@ -32,7 +30,7 @@
   
   .footer__description {
     font-size: 1.25rem;
-    color: #d1d5db;
+    color: var(--text-color);
     max-width: 640px;
     margin: 0 auto 3rem;
   }
@@ -43,31 +41,70 @@
     gap: 2rem;
     margin-bottom: 3rem;
   }
-  
-  .social-btn {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s, background 0.3s;
-    font-size: 1.5rem;
-  }
-  
-  .social-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.1);
-  }
-  
+
+.social-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 1.5rem;
+  color: #fff;
+  transition:
+    transform .35s ease,
+    box-shadow .35s ease,
+    background-color .35s ease;
+}
+
+.social-btn.git {
+  background: #24292e;
+}
+
+.social-btn.link {
+  background: #0a66c2;
+}
+
+.social-btn.insta {
+  background: linear-gradient(
+    45deg,
+    #f09433,
+    #e6683c,
+    #dc2743,
+    #cc2366,
+    #bc1888
+  );
+}
+
+.social-btn.gmail {
+  background: #ea4335;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.25);
+}
+
+[data-theme="light"] .social-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.15),
+    0 0 0 6px rgba(0,0,0,.04);
+}
+
+[data-theme="dark"] .social-btn {
+  box-shadow: 0 6px 20px rgba(0,0,0,.6);
+}
+
+[data-theme="dark"] .social-btn:hover {
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 0 14px 40px rgba(0,0,0,.9);
+}
+
   .footer__bottom {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top: 1px solid #374151;
+    border-top: 1px solid var(--text-color);
     padding-top: 2rem;
-    color: #9ca3af;
+    color: var(--text-color);
   }
   
   

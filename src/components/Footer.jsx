@@ -8,26 +8,26 @@ export default function Footer() {
       <div className="footer__content">
         <div className="text-center">
           <h3 className="footer__title">
-            <span className="text">Pronto para o Próximo Projeto?</span>
+  <span>Pronto para o Próximo Desafio</span>
           </h3>
 
           <p className="footer__description">
-            <span className="text">
-              Vamos criar algo incrível juntos. Estou sempre em busca de novos desafios e oportunidades empolgantes.
+            <span>
+              Desenvolvedor focado em qualidade, performance e boas práticas, aberto a novos desafios profissionais.
             </span>
           </p>
 
           <div className="footer__socials">
-            <a href="#" className="social-btn"><i className="fab fa-github"></i></a>
-            <a href="#" className="social-btn"><i className="fab fa-linkedin"></i></a>
-            <a href="#" className="social-btn"><i className="fab fa-twitter"></i></a>
-            <a href="#" className="social-btn"><i className="fas fa-envelope"></i></a>
+            <a href="#" className="social-btn git"><i className="fa-brands fa-github"></i></a>
+            <a href="#" className="social-btn link"><i className="fa-brands fa-linkedin"></i></a>
+            <a href="#" className="social-btn insta"><i className="fa-brands fa-instagram"></i></a>
+            <a href="#" className="social-btn gmail"><i className="fas fa-envelope"></i></a>
           </div>
 
           <div className="footer__bottom">
             <p>
               © 2026 Yan Silva •
-              <span className="text"> Desenvolvido por Yan Silva</span>
+              <span> Desenvolvido por Yan Silva</span>
              </p>
           </div>
         </div>

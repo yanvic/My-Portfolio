@@ -43,7 +43,7 @@ export default function Hobbies() {
                 height="42"
               />
               <figcaption>
-                <h4>Yanvic</h4>
+                <h4 className="user">Yanvic</h4>
               </figcaption>
             </figure>
           </header>
@@ -54,12 +54,12 @@ export default function Hobbies() {
   
           <footer className="instagram__buttons">
             <div className="left">
-              <span className="icon">♡</span>
-              <span className="icon">💬</span>
-              <span className="icon">✈</span>
+              <span className="icon"><i class="fa-solid fa-heart"></i></span>
+              <span className="icon"><i class="fa-regular fa-comment"></i></span>
+              <span className="icon"><i class="fa-regular fa-paper-plane"></i></span>
             </div>
             <div className="right">
-              <span className="icon">🔖</span>
+              <span className="icon"><i class="fa-regular fa-bookmark"></i></span>
             </div>
           </footer>
         </article>
