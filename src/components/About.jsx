@@ -10,7 +10,7 @@ const techs = [
   { name: "Linux", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" },
 ];
 
-export default function About() {
+export default function About({ t }) {
   const items = [...techs, ...techs];
 
   return (

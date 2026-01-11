@@ -1,8 +1,7 @@
-import { translations } from "../translate.js";
+import { translations } from "../i18n/translate.js";
 import "../styles/projects.css";
 
-export default function Projects({ lang = "en" }) {
-  const t = translations[lang] || translations["pt"];
+export default function Projects({ t }) {
   const projects = Array.isArray(t.projects_card ) ? t.projects_card : [];
 
   return (

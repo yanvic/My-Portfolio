@@ -27,7 +27,7 @@ const data = [
   },
 ];
 
-export default function Timeline() {
+export default function Timeline({ t }) {
   return (
     <section className="timeline">
       <svg
