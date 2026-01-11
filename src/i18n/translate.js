@@ -1,3 +1,5 @@
+import ProgressImage from "../assets/progress.jpeg"
+
 export const translations = {
   en: {
     home: "Home",
@@ -13,23 +15,24 @@ export const translations = {
     viewProject: "View project",
     projects_card: [
       {
-        title: "Project 1",
-        desc: "Description of Project 1 with some placeholder text. hjfdsafjldshfjhsdjdfdsfdds",
-        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-        link: "https://example.com/projeto1"
+        title: "Trading Card Duel",
+        desc: "Card game where the challenge is to determine which player has the higher Overall rating.",
+        image: ProgressImage.src,
+        link: "https://github.com/yanvic"
       },
       {
-        title: "Project 2",
-        desc: "Description of Project 2 with some placeholder text.  hjfdsafjldshfjhsdjdfdsfddsdsds",
-         image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-        link: "https://example.com/projeto1"
+        title: "FFMPEG",
+        desc: "Project focused on demonstrating the power and practical use of FFMPEG across various applications.",
+        image: ProgressImage.src,
+        link: "https://github.com/yanvic"
       },
       {
-        title: "Project 3",
-        desc: "Description of Project 3 with some placeholder text  hjfdsafjldshfjhsdjdfdsfdds.",
-        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-        link: "https://example.com/projeto1"
+        title: "Excel and PDF",
+        desc: "Tool for creating Excel and PDF layouts using macros, modern styling, and clean, professional design.",
+        image: ProgressImage.src,
+        link: "https://github.com/yanvic"
       },
+    
     ],
   },
   pt: {
@@ -46,22 +49,22 @@ export const translations = {
     viewProject: "Ver projeto",
     projects_card: [
       {
-        title: "Projeto 1",
-        desc: "Descrição do Projeto 1 com algum texto de exemplo. teste sendo testado jfnsdjfnsdjlk",
-        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-        link: "https://example.com/projeto1"
+        title: "Duelo de Cartinhas",
+        desc: "Jogo de cartas onde o desafio é descobrir qual jogador tem o Overall maior.",
+        image: ProgressImage.src,
+        link: "https://github.com/yanvic"
       },
       {
-        title: "Projeto 2",
-        desc: "Descrição do Projeto 2 com algum texto de exemplo.  hjfdsafjldshfjhsdjdfdsfdds",
-        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-        link: "https://example.com/projeto1"
+        title: "FFMPEG",  
+        desc: "Projeto dedicado para mostrar o poder e utilização do FFMPEG em diversas aplicações.",
+        image: ProgressImage.src,
+        link: "https://github.com/yanvic"
       },
       {
-        title: "Projeto 3",
-        desc: "Descrição do Projeto 3 com algum texto de exemplo  hjfdsafjldshfjhsdjdfdsfdds.",
-        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-        link: "https://example.com/projeto1"
+        title: "Excel e PDF",
+        desc: "Criador de layouts Excel e PDF com macros, estilização e layout moderno e bonito para diversas áreas.",
+        image: ProgressImage.src,
+        link: "https://github.com/yanvic"
       },
     ],
   },

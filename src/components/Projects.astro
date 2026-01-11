@@ -1,0 +1,34 @@
+---
+import "../styles/projects.css";
+
+type Project = {
+  title: string;
+  desc: string;
+  image: string;
+  link: string;
+};
+
+const { t } = Astro.props;
+
+const projects: Project[] = Array.isArray(t?.projects_card)
+  ? t.projects_card
+  : [];
+---
+
+<div class="projects-container">
+  {projects.map((project, index) => (
+    <article class="project-card">
+      <div class="thumb">
+        <img src={project.image} alt={project.title} />
+      </div>
+
+      <div class="info">
+        <h3 class="title">{project.title}</h3>
+        <p>{project.desc}</p>
+        <a href={project.link} target="_blank" rel="noopener noreferrer">
+          {t.viewProject}
+        </a>
+      </div>
+    </article>
+  ))}
+</div>
