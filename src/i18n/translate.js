@@ -8,7 +8,7 @@ export const translations = {
     welcome: "Welcome to my portfolio",
     description: "This is the main content...",
     hello: "Hi, I'm Yan",
-    presentation: "Developer in Golang and Rust",
+    presentation: "Software developer focused on building clear, efficient, and well-structured digital solutions. I work across interfaces, backend systems, and automations, always prioritizing code quality, maintainability, and user experience. Strong collaborator, able to turn requirements into practical solutions and continuously improve products.",
     button_projects: "Projects Look",
     viewProject: "View project",
     projects_card: [
@@ -41,7 +41,7 @@ export const translations = {
     welcome: "Bem-vindo ao meu portfólio",
     description: "Este é o conteúdo principal...",
     hello: "Oi, eu sou o Yan",
-    presentation: "Desenvolvedor de software com experiência no mercado financeiro, webscrapping e vídeo monitoramento. buscando perfomance e escalabilidade, utilizando testes da melhor maneira.",
+    presentation: "Desenvolvedor de software focado em criar soluções digitais claras, eficientes e bem estruturadas. Atuo no desenvolvimento de interfaces, sistemas backend e automações, sempre priorizando qualidade, organização do código e boa experiência do usuário. Tenho facilidade em colaborar com equipes, transformar requisitos em soluções práticas e evoluir produtos de forma contínua.",
     button_projects: "Ver Projetos",
     viewProject: "Ver projeto",
     projects_card: [

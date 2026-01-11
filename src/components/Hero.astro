@@ -1,0 +1,49 @@
+---
+import "../styles/hero.css";
+
+const TOTAL = 200;
+const { t } = Astro.props;
+
+const triangles = Array.from({ length: TOTAL }).map((_, i) => {
+  const size = Math.random() * 40 + 10;
+  const x = Math.random() * 1000 - 500;
+  const y = Math.random() * 1000 - 500;
+  const z = Math.random() * 2000 - 1000;
+  const rotate = Math.random() * 360;
+
+  return {
+    i,
+    style: {
+      "--size": `${size}px`,
+      "--x": `${x}px`,
+      "--y": `${y}px`,
+      "--z": `${z}px`,
+      "--r": `${rotate}deg`,
+      "--d": `${i * -0.05}s`,
+    },
+  };
+});
+---
+
+<section class="hero">
+  <div class="wrap">
+    {triangles.map(({ i, style }) => (
+      <div class="tri" style={style} />
+    ))}
+  </div>
+
+  <div class="hero-content">
+    <h1>{t.hello}</h1>
+    <p>{t.presentation}</p>
+
+    <a
+      href="https://github.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="button-hero"
+    >
+      <span>{t.button_projects}</span>
+    </a>
+  </div>
+</section>
+
