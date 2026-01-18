@@ -1,0 +1,36 @@
+---
+import "../styles/footer.css";
+const { t } = Astro.props;
+---
+
+    <footer class="footer">
+      <div class="footer__overlay"></div>
+
+      <div class="footer__content">
+        <div class="text-center">
+          <h3 class="footer__title">
+            <span>{t.footer_title}</span>
+          </h3>
+
+          <p class="footer__description">
+            <span>
+                {t.footer_desc}
+            </span>
+          </p>
+
+          <div class="footer__socials">
+            <a href="https://github.com/yanvic" class="social-btn git"><i class="fa-brands fa-github"></i></a>
+            <a href="https://linkedin.com/in/yan-silva12" class="social-btn link"><i class="fa-brands fa-linkedin"></i></a>
+            <!-- <a href="#" class="social-btn insta"><i class="fa-brands fa-instagram"></i></a> -->
+            <a href="mailto:yanvictorce@gmail.com" class="social-btn gmail"><i class="fas fa-envelope"></i></a>
+          </div>
+
+          <div class="footer__bottom">
+            <p>
+              © 2026 Yan Silva •
+              <span>{t.dev}</span>
+             </p>
+          </div>
+        </div>
+      </div>
+    </footer>
