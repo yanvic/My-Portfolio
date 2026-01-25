@@ -1,21 +1,19 @@
 ---
 import BaseLayout from "../../layouts/Layout.astro";
-import Hero from "../../components/Hero.jsx";
-import Projects from "../../components/Projects.jsx";
-import About from "../../components/About.jsx";
-import Article from "../../components/Article.jsx";
-import Time from "../../components/Timeline.jsx";
-import Hobbies from "../../components/Hobbies";
+import Hero from "../../components/Hero.astro";
+import Projects from "../../components/Projects.astro";
+import Article from "../../components/Article.astro";
+import Footer from "../../components/Footer.astro";
+import AboutSection from "../../components/sections/AboutSection.astro";
 import { translations } from "../../i18n/translate.js";
 
 const t = translations.en;
 ---
 
 <BaseLayout lang="en">
-  <Hero t={t} client:load />
-  <Projects t={t} client:load />
-  <About t={t} client:load />
-  <Time t={t} client:load />
-  <Hobbies t={t} client:load />
-  <Article t={t} client:load />
+  <Hero t={t} />
+  <Projects t={t} />
+  <AboutSection t={t} />
+  <Article t={t} />
+  <Footer t={t} />
 </BaseLayout>
