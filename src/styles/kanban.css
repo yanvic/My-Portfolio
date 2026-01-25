@@ -1,0 +1,100 @@
+/* Kanban - Mobile First */
+.soft-kanban {
+  width: 100%;
+}
+
+.kanban-title {
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  margin-bottom: clamp(16px, 3vw, 24px);
+  color: var(--text-color);
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .kanban-title {
+    text-align: left;
+  }
+}
+
+.kanban-board {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile: 1 coluna */
+  gap: 12px;
+}
+
+@media (min-width: 600px) {
+  .kanban-board {
+    grid-template-columns: repeat(2, 1fr); /* Tablet: 2 colunas */
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .kanban-board {
+    grid-template-columns: repeat(4, 1fr); /* Desktop: 4 colunas */
+    gap: 20px;
+  }
+}
+
+.kanban-column {
+  padding: clamp(12px, 2.5vw, 14px);
+  border-radius: clamp(12px, 2.5vw, 14px);
+  background: #f5f5f5;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  min-height: 120px;
+}
+
+.kanban-column h4 {
+  margin-bottom: clamp(10px, 2vw, 12px);
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.card-skills {
+  background-color: var(--color-primary);
+  color: var(--text-color);
+  border-radius: 6px;
+  padding: clamp(8px, 1.8vw, 10px) clamp(10px, 2vw, 12px);
+  margin-bottom: clamp(8px, 1.8vw, 10px);
+  font-size: clamp(0.8rem, 1.8vw, 0.85rem);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 6px 12px rgba(0, 0, 0, 0.05);
+  transform: rotate(-0.4deg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-skills:nth-child(even) {
+  transform: rotate(0.6deg);
+}
+
+.card-skills:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 0 12px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Cores das colunas */
+.backlog {
+  background: #f00303;
+}
+.todo {
+  background: #1994eb;
+}
+.doing {
+  background: #cc7518;
+}
+.done {
+  background: #10c91f;
+}
+
+/* Accessibility - desabilitar rotação para motion reduced */
+@media (prefers-reduced-motion: reduce) {
+  .card-skills,
+  .card-skills:nth-child(even) {
+    transform: none;
+  }
+
+  .card-skills:hover {
+    transform: scale(1.02);
+  }
+}

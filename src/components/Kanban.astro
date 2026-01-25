@@ -1,0 +1,39 @@
+---
+import "../styles/kanban.css";
+const { t } = Astro.props;
+---
+<section class="soft-kanban">
+  <h3 class="kanban-title">Meu Kanban pessoal</h3>
+
+  <div class="kanban-board">
+    <div class="kanban-column backlog">
+      <h4>Backlog</h4>
+      <div class="card-skills">Curiosidade constante</div>
+      <div class="card-skills">Pensamento crítico</div>
+      <div class="card-skills">Aprender com feedback</div>
+      <div class="card-skills">Visão de produto</div>
+    </div>
+
+    <div class="kanban-column todo">
+      <h4>To Do</h4>
+      <div class="card-skills">Falar em público</div>
+      <div class="card-skills">Storytelling técnico</div>
+      <div class="card-skills">Liderar discussões</div>
+    </div>
+
+    <div class="kanban-column doing">
+      <h4>Doing</h4>
+      <div class="card-skills">Comunicação clara</div>
+      <div class="card-skills">Organização pessoal</div>
+      <div class="card-skills">Colaboração ativa</div>
+    </div>
+
+    <div class="kanban-column done">
+      <h4>Done</h4>
+      <div class="card-skills">Responsabilidade</div>
+      <div class="card-skills">Autonomia</div>
+      <div class="card-skills">Proatividade</div>
+      <div class="card-skills">Comprometimento</div>
+    </div>
+  </div>
+</section>     
