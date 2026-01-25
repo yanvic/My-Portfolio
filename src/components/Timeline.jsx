@@ -2,28 +2,28 @@ import "../styles/timeline.css";
 
 const data = [
   {
-    year: "2021",
-    title: "Início",
-    desc: "Primeiro contato com programação, lógica e web.",
-    tech: ["HTML", "CSS", "JS"],
-  },
-  {
     year: "2022",
     title: "Estágio",
-    desc: "React, componentes, estado e UI.",
-    tech: ["React", "UI"],
+    desc: "Primeiros passos no mundo do código, descobrindo a lógica por trás das aplicações.",
+    tech: ["Flutter", "Go", "Vue.js", "Postgres"],
   },
   {
     year: "2024",
-    title: "Freelancer",
-    desc: "Back-end, bancos e deploy.",
-    tech: ["Node", "Mongo", "Docker"],
+    title: "Júnior",
+    desc: "Aprendizado contínuo, conhecendo novos projetos e consolidando as tecnologias.",
+    tech: ["Rust", "HTML", "CSS", "JS", "Python"],
   },
   {
     year: "2025",
-    title: "Full Stack",
-    desc: "Back-end, bancos e deploy.",
-    tech: ["Node", "Mongo", "Docker"],
+    title: "Freelancer",
+    desc: "Projetos variados, contato direto com clientes e responsabilidade total sobre as entregas.",
+    tech: ["Rust", "JS", "Python", "n8n"],
+  },
+  {
+    year: "2026",
+    title: "Pleno",
+    desc: "Novos desafios, maior responsabilidade técnica e participação em decisões de arquitetura.",
+    tech: ["Node", "Flutter", "SQL Server"],
   },
 ];
 
@@ -32,15 +32,11 @@ export default function Timeline({ t }) {
     <section className="timeline">
       <svg
         className="timeline-line"
-        viewBox="0 0 600 300"
+        viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
         <path
-          d="
-            M 20 150
-            C 140 60, 240 240, 340 150
-            S 460 60, 580 150
-          "
+          d="M 0 50 L 100 50"
           pathLength="1"
         />
       </svg>
