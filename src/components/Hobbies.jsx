@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import "../styles/hobbies.css";
 
+const PROFILE = {
+  name: "Yanvic",
+  avatar: "src/assets/hobbies/profile.avif",
+};
+
 const images = [
-  "https://images.unsplash.com/photo-1542668340-9387e6981c5f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZnJlZSUyMGltYWdlcyUyMGhvYmJpZXN8ZW58MHx8MHx8fDA%3D",
-  "https://plus.unsplash.com/premium_photo-1686255006386-5f58b00ffe9d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZnVuZG98ZW58MHx8MHx8fDA%3D",
-  "https://images.unsplash.com/photo-1515504846179-94ac6b34ebb9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHRlbWF8ZW58MHx8MHx8fDA%3D",
+  "src/assets/hobbies/photo3.avif",
+  "src/assets/hobbies/photo4.avif",
+  "src/assets/hobbies/photo5.avif",
+  "src/assets/hobbies/photo6.avif",
+  "src/assets/hobbies/photo7.avif",
 ];
 
 export default function Hobbies({ t }) {
@@ -13,56 +20,42 @@ export default function Hobbies({ t }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 2000);
-
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="container">
-      <aside className="carousel">
-        <div className="carousel__wrapper">
-          {images.map((src, i) => (
-            <div
-              key={i}
-              className={`item ${i === index ? "active" : ""}`}
-            >
-              <img src={src} alt="" />
-            </div>
-          ))}
-        </div>
-      </aside>
+    <article className="instagram">
+      <header className="instagram__header">
+        <figure>
+          <img src={PROFILE.avatar} alt="perfil" />
+          <figcaption>
+            <h4 className="user">{PROFILE.name}</h4>
+          </figcaption>
+        </figure>
+      </header>
 
-      <article className="instagram">
-          <header className="instagram__header">
-            <figure>
-              <img
-                src="https://images.unsplash.com/photo-1515504846179-94ac6b34ebb9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHRlbWF8ZW58MHx8MHx8fDA%3D"
-                alt="perfil"
-                width="42"
-                height="42"
-              />
-              <figcaption>
-                <h4 className="user">Yanvic</h4>
-              </figcaption>
-            </figure>
-          </header>
-  
-          <section className="instagram__media">
-            <div className="img" />
-          </section>
-  
-          <footer className="instagram__buttons">
-            <div className="left">
-              <span className="icon"><i class="fa-solid fa-heart"></i></span>
-              <span className="icon"><i class="fa-regular fa-comment"></i></span>
-              <span className="icon"><i class="fa-regular fa-paper-plane"></i></span>
-            </div>
-            <div className="right">
-              <span className="icon"><i class="fa-regular fa-bookmark"></i></span>
-            </div>
-          </footer>
-        </article>
-    </div>
+      <section className="instagram__media">
+        {images.map((src, i) => (
+          <img
+            key={i}
+            src={src}
+            alt=""
+            className={i === index ? "active" : ""}
+          />
+        ))}
+      </section>
+
+      <footer className="instagram__buttons">
+        <div className="left">
+          <span className="icon"><i className="fa-solid fa-heart"></i></span>
+          <span className="icon"><i className="fa-regular fa-comment"></i></span>
+          <span className="icon"><i className="fa-regular fa-paper-plane"></i></span>
+        </div>
+        <div className="right">
+          <span className="icon"><i className="fa-regular fa-bookmark"></i></span>
+        </div>
+      </footer>
+    </article>
   );
 }
