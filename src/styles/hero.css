@@ -5,6 +5,7 @@
   isolation: isolate;
   background: transparent;
   color: var(--text-color);
+  margin-bottom: 90px;
 }
 
 .button-hero {
