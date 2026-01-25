@@ -2,60 +2,21 @@
 import About from "../About.jsx";
 import Timeline from "../Timeline.jsx";
 import Hobbies from "../Hobbies.jsx";
+import Kanban from "../Kanban.astro";
 import "../../styles/about-section.css";
 
 const { t } = Astro.props;
 ---
 
-<div class="wrapper">
-    <div class="box a">
+<section id="about" class="wrapper">
+    <div class="box a" data-animate="fade-right">
         <About t={t} client:load /></div>
-    <div class="box b">
+    <div class="box b" data-animate="fade-left" data-delay="200">
         <Hobbies t={t} client:load /></div>
-    <div class="box c"><Timeline t={t} client:load /></div>
-    <div class="box d"><section class="kanban">
-        <h3 class="kanban-title">Meu fluxo como dev</h3>
-      
-        <div class="kanban-board">
-          <div class="kanban-column">
-            <h4>🧠 Ideia</h4>
-            <ul>
-              <li>Entender o problema</li>
-              <li>Questionar requisitos</li>
-              <li>Pensar em UX</li>
-            </ul>
-          </div>
-      
-          <div class="kanban-column">
-            <h4>🛠️ Construindo</h4>
-            <ul>
-              <li>Codar simples</li>
-              <li>Componentes reutilizáveis</li>
-              <li>Backend claro</li>
-            </ul>
-          </div>
-      
-          <div class="kanban-column">
-            <h4>🧪 Refinando</h4>
-            <ul>
-              <li>Refatoração</li>
-              <li>Performance</li>
-              <li>Legibilidade</li>
-            </ul>
-          </div>
-      
-          <div class="kanban-column">
-            <h4>🚀 Entrega</h4>
-            <ul>
-              <li>Deploy</li>
-              <li>Código organizado</li>
-              <li>Pronto para escalar</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-      
-      </div>
-  </div>
+    <div class="box c" data-animate="fade-up" data-delay="300"><Timeline t={t} client:load /></div>
+    <div class="box d" data-animate="fade-up" data-delay="400">
+      <Kanban t={t} />
+    </div>
+  </section>
 
 
