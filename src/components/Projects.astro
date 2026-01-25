@@ -15,9 +15,9 @@ const projects: Project[] = Array.isArray(t?.projects_card)
   : [];
 ---
 
-<div class="projects-container">
+<section id="projects" class="projects-container">
   {projects.map((project, index) => (
-    <article class="project-card">
+    <article class="project-card" data-animate="fade-up" data-delay={index * 100}>
       <div class="thumb">
         <img src={project.image} alt={project.title} />
       </div>
@@ -31,4 +31,4 @@ const projects: Project[] = Array.isArray(t?.projects_card)
       </div>
     </article>
   ))}
-</div>
+</section>
