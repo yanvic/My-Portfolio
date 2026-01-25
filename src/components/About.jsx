@@ -1,13 +1,17 @@
 import "../styles/about.css";
 
 const techs = [
-  { name: "React", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-  { name: "Go", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" },
-  { name: "Rust", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg" },
-  { name: "Docker", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
-  { name: "MongoDB", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
-  { name: "PostgreSQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
-  { name: "Linux", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" },
+  { name: "React", logo: "src/assets/techs/react.avif" },
+  { name: "Go", logo: "src/assets/techs/go.avif" },
+  { name: "Javascript", logo: "src/assets/techs/javascript.avif" },
+  { name: "Rust", logo: "src/assets/techs/rust.avif" },
+  { name: "Docker", logo: "src/assets/techs/docker.avif" },
+  { name: "MongoDB", logo: "src/assets/techs/mongodb.avif" },
+  { name: "PostgreSQL", logo: "src/assets/techs/postgresql.avif" },
+  { name: "Linux", logo: "src/assets/techs/linux.avif" },
+  { name: "NodeJs", logo: "src/assets/techs/nodejs.avif" },
+  { name: "Flutter", logo: "src/assets/techs/flutter.avif" },
+  { name: "Aws", logo: "src/assets/techs/aws.avif" },
 ];
 
 export default function About({ t }) {
