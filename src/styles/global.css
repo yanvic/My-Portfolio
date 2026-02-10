@@ -79,7 +79,6 @@
 
   /* ========== SCROLL REVEAL ANIMATIONS ========== */
 
-  /* Elementos que terão animação de entrada */
   [data-animate] {
     opacity: 0;
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
@@ -89,7 +88,6 @@
     opacity: 1;
   }
 
-  /* Fade Up - elemento sobe ao aparecer */
   [data-animate="fade-up"] {
     transform: translateY(50px);
   }
@@ -107,7 +105,6 @@
     transform: translateY(0);
   }
 
-  /* Fade Left */
   [data-animate="fade-left"] {
     transform: translateX(-50px);
   }
@@ -116,7 +113,6 @@
     transform: translateX(0);
   }
 
-  /* Fade Right */
   [data-animate="fade-right"] {
     transform: translateX(50px);
   }
@@ -125,7 +121,6 @@
     transform: translateX(0);
   }
 
-  /* Zoom In */
   [data-animate="zoom-in"] {
     transform: scale(0.9);
   }
@@ -134,7 +129,6 @@
     transform: scale(1);
   }
 
-  /* Zoom Out */
   [data-animate="zoom-out"] {
     transform: scale(1.1);
   }
@@ -143,7 +137,6 @@
     transform: scale(1);
   }
 
-  /* Flip */
   [data-animate="flip"] {
     transform: perspective(1000px) rotateY(90deg);
   }
@@ -152,7 +145,6 @@
     transform: perspective(1000px) rotateY(0);
   }
 
-  /* Delays escalonados para criar efeito cascata */
   [data-animate][data-delay="100"] {
     transition-delay: 0.1s;
   }
@@ -177,7 +169,6 @@
     transition-delay: 0.6s;
   }
 
-  /* Accessibility - reduzir movimento se preferido */
   @media (prefers-reduced-motion: reduce) {
     [data-animate] {
       opacity: 1;
@@ -192,7 +183,6 @@
 
   /* ========== MODERN VISUAL EFFECTS ========== */
 
-  /* Gradiente animado de fundo */
   body::before {
     content: '';
     position: fixed;
@@ -226,13 +216,11 @@
     }
   }
 
-  /* Garantir que o conteúdo fique acima */
   body > *:not(script) {
     position: relative;
     z-index: 1;
   }
 
-  /* Glow effect para elementos interativos */
   .glow-on-hover {
     position: relative;
     transition: all 0.3s ease;
@@ -258,7 +246,6 @@
     opacity: 0.5;
   }
 
-  /* Glassmorphism effect */
   .glass {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
@@ -271,7 +258,6 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  /* Smooth shadows */
   .shadow-soft {
     box-shadow:
       0 2px 4px rgba(0, 0, 0, 0.05),
@@ -306,4 +292,48 @@
     box-shadow:
       0 10px 20px rgba(0, 0, 0, 0.4),
       0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ========== SECTION SPACING ========== */
+  section {
+    scroll-margin-top: 100px;
+    padding-block: clamp(40px, 8vw, 80px);
+  }
+
+  section + section {
+    margin-top: clamp(80px, 12vw, 140px);
+  }
+
+  #projects {
+    padding-block: clamp(60px, 10vw, 100px);
+  }
+
+  #about {
+    padding-block: clamp(50px, 9vw, 90px);
+  }
+
+  .section-divider::before {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-secondary), var(--color-tertiary), transparent);
+    border-radius: 2px;
+    margin: 0 auto clamp(50px, 8vw, 80px);
+    opacity: 0.6;
+  }
+
+  section::after {
+    content: '';
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-secondary), transparent);
+    margin: clamp(60px, 10vw, 100px) auto 0;
+    opacity: 0.3;
+  }
+
+  section:last-of-type::after {
+    display: none;
   }

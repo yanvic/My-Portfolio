@@ -18,7 +18,7 @@ const articles: Article[] = Array.isArray(t?.articles_card)
   : [];
 ---
 
-<section id="blog" class="projects-container">
+<section id="blog" class="articles-container">
   {articles.map((article, index) => (
    <article class="article-card" data-animate="zoom-in" data-delay={index * 150}>
       <div class="card-glow" />
