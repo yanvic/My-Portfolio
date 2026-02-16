@@ -20,6 +20,15 @@ const { t } = Astro.props;
             <a href="https://github.com/yanvic" class="social-btn git" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
             <a href="https://linkedin.com/in/yan-silva12" class="social-btn link" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
             <a href="mailto:yanvictorce@gmail.com" class="social-btn gmail" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            <div class="social-btn-group">
+              <button class="social-btn resume" aria-label={t?.resume || "Currículo"}><i class="fas fa-file-alt"></i></button>
+              <a href="/cv/curriculo.pdf" target="_blank" rel="noopener noreferrer" class="social-sub view-sub" aria-label={t?.viewResume || "Visualizar"}>
+                <i class="fas fa-eye"></i>
+              </a>
+              <a href="/cv/curriculo.pdf" download class="social-sub download-sub" aria-label={t?.downloadResume || "Baixar"}>
+                <i class="fas fa-download"></i>
+              </a>
+            </div>
           </div>
 
           <div class="footer__bottom">
@@ -28,3 +37,22 @@ const { t } = Astro.props;
         </div>
       </div>
     </footer>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const group = document.querySelector(".social-btn-group");
+    const btn = group?.querySelector(".social-btn.resume");
+
+    if (!group || !btn) return;
+
+    btn.addEventListener("click", () => {
+      group.classList.toggle("active");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!group.contains(e.target as Node)) {
+        group.classList.remove("active");
+      }
+    });
+  });
+</script>
