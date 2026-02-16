@@ -19,6 +19,9 @@ export const translations = {
     presentation: "Software developer focused on building clear, efficient, and well-structured digital solutions. I work across interfaces, backend systems, and automations, always prioritizing code quality, maintainability, and user experience. Strong collaborator, able to turn requirements into practical solutions and continuously improve products.",
     button_projects: "Projects Look",
     viewProject: "View project",
+    viewResume: "View Resume",
+    downloadResume: "Download",
+    resume: "Resume",
     footer_title: "Ready for the Next Challenge",
     footer_desc: "Developer focused on quality, performance, and best practices, open to new professional challenges.",
     dev: "Developed by Yan Silva",
@@ -27,19 +30,25 @@ export const translations = {
         title: "Trading Card Duel",
         desc: "Card game where the challenge is to determine which player has the higher Overall rating.",
         image: ProgressImage.src,
-        link: "https://github.com/yanvic"
+        link: "https://github.com/yanvic",
+        github: "https://github.com/yanvic",
+        techs: ["React", "TypeScript", "Node.js"]
       },
       {
         title: "FFMPEG",
         desc: "Project focused on demonstrating the power and practical use of FFMPEG across various applications.",
         image: ProgressImage.src,
-        link: "https://github.com/yanvic"
+        link: "https://github.com/yanvic",
+        github: "https://github.com/yanvic",
+        techs: ["Go", "Docker", "Linux"]
       },
       {
         title: "Excel and PDF",
         desc: "Tool for creating Excel and PDF layouts using macros, modern styling, and clean, professional design.",
         image: ProgressImage.src,
-        link: "https://github.com/yanvic"
+        link: "https://github.com/yanvic",
+        github: "https://github.com/yanvic",
+        techs: ["JavaScript", "Node.js", "AWS"]
       },
     ],
     articles_card: [
@@ -87,6 +96,9 @@ export const translations = {
     presentation: "Desenvolvedor de software focado em criar soluções digitais claras, eficientes e bem estruturadas. Atuo no desenvolvimento de interfaces, sistemas backend e automações, sempre priorizando qualidade, organização do código e boa experiência do usuário. Tenho facilidade em colaborar com equipes, transformar requisitos em soluções práticas e evoluir produtos de forma contínua.",
     button_projects: "Ver Projetos",
     viewProject: "Ver projeto",
+    viewResume: "Visualizar",
+    downloadResume: "Baixar",
+    resume: "Currículo",
     footer_title: "Pronto para o Próximo Desafio",
     footer_desc: "Desenvolvedor focado em qualidade, performance e boas práticas, aberto a novos desafios profissionais.",
     dev: "Desenvolvido por Yan Silva",
@@ -95,19 +107,25 @@ export const translations = {
         title: "Duelo de Cartinhas",
         desc: "Jogo de cartas onde o desafio é descobrir qual jogador tem o Overall maior.",
         image: ProgressImage.src,
-        link: "https://github.com/yanvic"
+        link: "https://github.com/yanvic",
+        github: "https://github.com/yanvic",
+        techs: ["React", "TypeScript", "Node.js"]
       },
       {
-        title: "FFMPEG",  
+        title: "FFMPEG",
         desc: "Projeto dedicado para mostrar o poder e utilização do FFMPEG em diversas aplicações.",
         image: ProgressImage.src,
-        link: "https://github.com/yanvic"
+        link: "https://github.com/yanvic",
+        github: "https://github.com/yanvic",
+        techs: ["Go", "Docker", "Linux"]
       },
       {
         title: "Excel e PDF",
         desc: "Criador de layouts Excel e PDF com macros, estilização e layout moderno e bonito para diversas áreas.",
         image: ProgressImage.src,
-        link: "https://github.com/yanvic"
+        link: "https://github.com/yanvic",
+        github: "https://github.com/yanvic",
+        techs: ["JavaScript", "Node.js", "AWS"]
       },
     ],
     articles_card: [
