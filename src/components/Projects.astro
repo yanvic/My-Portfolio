@@ -6,6 +6,8 @@ type Project = {
   desc: string;
   image: string;
   link: string;
+  github?: string;
+  techs?: string[];
 };
 
 const { t } = Astro.props;
@@ -15,20 +17,217 @@ const projects: Project[] = Array.isArray(t?.projects_card)
   : [];
 ---
 
-<section id="projects" class="projects-container">
-  {projects.map((project, index) => (
-    <article class="project-card" data-animate="fade-up" data-delay={index * 100}>
-      <div class="thumb">
-        <img src={project.image} alt={project.title} />
-      </div>
+<section id="projects" class="projects-bento">
+  <!-- <h2 class="projects-title" data-animate="fade-up">
+    {t?.projects || "Projetos"}
+  </h2> -->
 
-      <div class="info">
-        <h3 class="title">{project.title}</h3>
-        <p>{project.desc}</p>
-        <a href={project.link} target="_blank" rel="noopener noreferrer">
-          {t.viewProject}
-        </a>
-      </div>
+  <div class="bento-container">
+    <article class="featured-card" data-animate="fade-right" id="featured-project">
+      {projects.length > 0 && (
+        <>
+          <div class="featured-image">
+            <img src={projects[0].image} alt={projects[0].title} id="featured-img" />
+            <div class="featured-overlay"></div>
+          </div>
+
+          <div class="featured-content">
+            <div class="featured-badges" id="featured-badges">
+              {projects[0].techs && projects[0].techs.map((tech) => (
+                <span class="badge">{tech}</span>
+              ))}
+            </div>
+
+            <h3 class="featured-title" id="featured-title">{projects[0].title}</h3>
+            <p class="featured-desc" id="featured-desc">{projects[0].desc}</p>
+
+            <div class="featured-buttons">
+              <a
+                href={projects[0].link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-primary"
+                id="featured-link"
+              >
+                <span class="btn-icon">🔗</span>
+                {t?.viewProject || "Ver Projeto"}
+              </a>
+              <a
+                href={projects[0].github || projects[0].link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-secondary"
+                id="featured-github"
+                style={!projects[0].github ? "display: none;" : ""}
+              >
+                <span class="btn-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                  </svg>
+                </span>
+                GitHub
+              </a>
+            </div>
+          </div>
+
+          <!-- Progress dots -->
+          <div class="progress-container" id="progress-dots">
+            {projects.map((_, i) => (
+              <button
+                class={`progress-dot ${i === 0 ? "active" : ""}`}
+                data-index={i}
+                aria-label={`Projeto ${i + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </article>
-  ))}
+
+    <div class="mini-cards" data-animate="fade-left" data-delay="200">
+      {projects.map((project, index) => (
+        <article
+          class={`mini-card ${index === 0 ? "active" : ""}`}
+          data-index={index}
+          data-title={project.title}
+          data-desc={project.desc}
+          data-image={project.image}
+          data-link={project.link}
+          data-github={project.github || ""}
+          data-techs={project.techs ? project.techs.join(",") : ""}
+        >
+          <div class="mini-image">
+            <img src={project.image} alt={project.title} loading="lazy" />
+          </div>
+          <h4 class="mini-title">{project.title}</h4>
+          <div class="active-indicator"></div>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <div class="rotation-status" id="rotation-status" style="display: none;">
+    <span class="pause-icon">⏸</span>
+  </div>
 </section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const miniCards = document.querySelectorAll(".mini-card");
+    const progressDots = document.querySelectorAll(".progress-dot");
+    const rotationStatus = document.getElementById("rotation-status");
+
+    const featuredImg = document.getElementById("featured-img") as HTMLImageElement;
+    const featuredTitle = document.getElementById("featured-title");
+    const featuredDesc = document.getElementById("featured-desc");
+    const featuredLink = document.getElementById("featured-link") as HTMLAnchorElement;
+    const featuredGithub = document.getElementById("featured-github") as HTMLAnchorElement;
+    const featuredBadges = document.getElementById("featured-badges");
+
+    let activeIndex = 0;
+    let isPaused = false;
+    let autoRotateInterval: ReturnType<typeof setInterval> | null = null;
+    let pauseTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const AUTO_ROTATE_MS = 5000; // 5 segundos
+    const PAUSE_MS = 60000; // 1 minuto
+
+    function updateFeaturedCard(index: number) {
+      const card = miniCards[index] as HTMLElement;
+      if (!card) return;
+
+      const featuredCard = document.getElementById("featured-project");
+      featuredCard?.classList.add("transitioning");
+
+      setTimeout(() => {
+        if (featuredImg) {
+          featuredImg.src = card.dataset.image || "";
+          featuredImg.alt = card.dataset.title || "";
+        }
+        if (featuredTitle) featuredTitle.textContent = card.dataset.title || "";
+        if (featuredDesc) featuredDesc.textContent = card.dataset.desc || "";
+        if (featuredLink) featuredLink.href = card.dataset.link || "#";
+
+        if (featuredGithub) {
+          if (card.dataset.github) {
+            featuredGithub.href = card.dataset.github;
+            featuredGithub.style.display = "";
+          } else {
+            featuredGithub.style.display = "none";
+          }
+        }
+
+        if (featuredBadges) {
+          const techs = card.dataset.techs?.split(",").filter(Boolean) || [];
+          featuredBadges.innerHTML = techs
+            .map((tech) => `<span class="badge">${tech}</span>`)
+            .join("");
+        }
+
+        miniCards.forEach((c, i) => {
+          c.classList.toggle("active", i === index);
+        });
+        progressDots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === index);
+        });
+
+        activeIndex = index;
+
+        setTimeout(() => {
+          featuredCard?.classList.remove("transitioning");
+        }, 50);
+      }, 200);
+    }
+
+    function startAutoRotate() {
+      if (autoRotateInterval) clearInterval(autoRotateInterval);
+      if (miniCards.length <= 1) return;
+
+      autoRotateInterval = setInterval(() => {
+        if (!isPaused) {
+          const nextIndex = (activeIndex + 1) % miniCards.length;
+          updateFeaturedCard(nextIndex);
+        }
+      }, AUTO_ROTATE_MS);
+    }
+
+    function handleUserInteraction(index: number) {
+      if (index === activeIndex) return;
+
+      updateFeaturedCard(index);
+      isPaused = true;
+      if (rotationStatus) rotationStatus.style.display = "flex";
+
+      if (pauseTimeout) clearTimeout(pauseTimeout);
+
+      pauseTimeout = setTimeout(() => {
+        isPaused = false;
+        if (rotationStatus) rotationStatus.style.display = "none";
+      }, PAUSE_MS);
+    }
+
+    miniCards.forEach((card) => {
+      card.addEventListener("click", () => {
+        const index = parseInt((card as HTMLElement).dataset.index || "0", 10);
+        handleUserInteraction(index);
+      });
+    });
+
+    progressDots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        const index = parseInt((dot as HTMLElement).dataset.index || "0", 10);
+        handleUserInteraction(index);
+      });
+    });
+
+    startAutoRotate();
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (autoRotateInterval) clearInterval(autoRotateInterval);
+      } else {
+        startAutoRotate();
+      }
+    });
+  });
+</script>
