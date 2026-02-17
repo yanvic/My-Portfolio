@@ -4,6 +4,7 @@ const techs = [
   { name: "React", logo: "src/assets/techs/react.avif" },
   { name: "Go", logo: "src/assets/techs/go.avif" },
   { name: "Javascript", logo: "src/assets/techs/javascript.avif" },
+  { name: "Typescript", logo: "src/assets/techs/typescript.avif" },
   { name: "Rust", logo: "src/assets/techs/rust.avif" },
   { name: "Docker", logo: "src/assets/techs/docker.avif" },
   { name: "MongoDB", logo: "src/assets/techs/mongodb.avif" },

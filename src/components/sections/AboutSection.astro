@@ -10,7 +10,8 @@ const { t } = Astro.props;
 
 <section id="about" class="wrapper">
     <div class="box a" data-animate="fade-right">
-        <About t={t} client:load /></div>
+        <About t={t} client:load />
+    </div>
     <div class="box b" data-animate="fade-left" data-delay="200">
         <Hobbies t={t} client:load /></div>
     <div class="box c" data-animate="fade-up" data-delay="300"><Timeline t={t} client:load /></div>

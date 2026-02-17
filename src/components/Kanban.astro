@@ -3,37 +3,106 @@ import "../styles/kanban.css";
 const { t } = Astro.props;
 ---
 <section class="soft-kanban">
-  <h3 class="kanban-title">Meu Kanban pessoal</h3>
+  <h3 class="kanban-title">
+    <span class="kanban-icon"><i class="fa-brands fa-trello"></i></span>
+    Meu Kanban pessoal
+  </h3>
 
   <div class="kanban-board">
-    <div class="kanban-column backlog">
-      <h4>Backlog</h4>
-      <div class="card-skills">Curiosidade constante</div>
-      <div class="card-skills">Pensamento crítico</div>
-      <div class="card-skills">Aprender com feedback</div>
-      <div class="card-skills">Visão de produto</div>
+    <div class="kanban-column">
+      <div class="column-header backlog-header">
+        <span class="status-dot backlog-dot"></span>
+        <h4>Backlog</h4>
+        <span class="column-count">4</span>
+      </div>
+      <div class="column-body">
+        <div class="card-skills">
+          <span class="card-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <span>Curiosidade constante</span>
+        </div>
+        <div class="card-skills">
+          <span class="card-icon"><i class="fa-solid fa-brain"></i></span>
+          <span>Pensamento crítico</span>
+        </div>
+        <div class="card-skills">
+          <span class="card-icon"><i class="fa-solid fa-message"></i></span>
+          <span>Aprender com feedback</span>
+        </div>
+        <div class="card-skills">
+          <span class="card-icon"><i class="fa-brands fa-product-hunt"></i></span>
+          <span>Visão de produto</span>
+        </div>
+      </div>
     </div>
 
-    <div class="kanban-column todo">
-      <h4>To Do</h4>
-      <div class="card-skills">Falar em público</div>
-      <div class="card-skills">Storytelling técnico</div>
-      <div class="card-skills">Liderar discussões</div>
+    <div class="kanban-column">
+      <div class="column-header todo-header">
+        <span class="status-dot todo-dot"></span>
+        <h4>To Do</h4>
+        <span class="column-count">3</span>
+      </div>
+      <div class="column-body">
+        <div class="card-skills">
+          <span class="card-icon"><i class="fa-solid fa-microphone"></i></span>
+          <span>Falar em público</span>
+        </div>
+        <div class="card-skills">
+          <span class="card-icon"><i class="fa-solid fa-book"></i></span>
+          <span>Storytelling técnico</span>
+        </div>
+        <div class="card-skills">
+          <span class="card-icon"><i class="fa-solid fa-person"></i></span>
+          <span>Liderar discussões</span>
+        </div>
+      </div>
     </div>
 
-    <div class="kanban-column doing">
-      <h4>Doing</h4>
-      <div class="card-skills">Comunicação clara</div>
-      <div class="card-skills">Organização pessoal</div>
-      <div class="card-skills">Colaboração ativa</div>
+    <div class="kanban-column">
+      <div class="column-header doing-header">
+        <span class="status-dot doing-dot"></span>
+        <h4>Doing</h4>
+        <span class="column-count">3</span>
+      </div>
+      <div class="column-body">
+        <div class="card-skills">
+          <span class="card-icon"><i class="fa-solid fa-file-pen"></i></span>
+          <span>Comunicação clara</span>
+        </div>
+        <div class="card-skills">
+          <span class="card-icon"><i class="fa-regular fa-calendar"></i></span>
+          <span>Organização pessoal</span>
+        </div>
+        <div class="card-skills">
+          <span class="card-icon"><i class="fa-solid fa-user-group"></i></span>
+          <span>Colaboração ativa</span>
+        </div>
+      </div>
     </div>
 
-    <div class="kanban-column done">
-      <h4>Done</h4>
-      <div class="card-skills">Responsabilidade</div>
-      <div class="card-skills">Autonomia</div>
-      <div class="card-skills">Proatividade</div>
-      <div class="card-skills">Comprometimento</div>
+    <div class="kanban-column">
+      <div class="column-header done-header">
+        <span class="status-dot done-dot"></span>
+        <h4>Done</h4>
+        <span class="column-count">4</span>
+      </div>
+      <div class="column-body">
+        <div class="card-skills done-card">
+          <span class="card-icon"><i class="fa-solid fa-user-check"></i></span>
+          <span>Resiliência</span>
+        </div>
+        <div class="card-skills done-card">
+          <span class="card-icon"><i class="fa-regular fa-user"></i></span>
+          <span>Autonomia</span>
+        </div>
+        <div class="card-skills done-card">
+          <span class="card-icon"><i class="fa-solid fa-user-gear"></i></span>
+          <span>Proatividade</span>
+        </div>
+        <div class="card-skills done-card">
+          <span class="card-icon"><i class="fa-brands fa-think-peaks"></i></span>
+          <span>Passagem de conhecimento</span>
+        </div>
+      </div>
     </div>
   </div>
-</section>     
+</section>

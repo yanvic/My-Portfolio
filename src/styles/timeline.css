@@ -101,6 +101,7 @@
     justify-content: space-between;
     padding: 0;
     gap: 0;
+    overflow: visible;
   }
 
   .timeline-line {
@@ -157,11 +158,11 @@
 
   .card {
     position: absolute;
-    top: 50%;
-    left: 110%;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
     max-width: 200px;
     width: 200px;
-    transform: translateY(-50%) translateX(-10px);
     opacity: 0;
     pointer-events: none;
     transition: all 0.35s ease;
@@ -170,7 +171,7 @@
 
   .point:hover .card {
     opacity: 1;
-    transform: translateY(-50%) translateX(0);
+    transform: translateX(-50%) translateY(0);
     pointer-events: auto;
   }
 
@@ -178,15 +179,22 @@
     z-index: 20;
   }
 
-  .p3 .card,
-  .p4 .card {
-    left: auto;
-    right: 110%;
-    transform: translateY(-50%) translateX(10px);
+  /* Primeiro card: alinhar à esquerda */
+  .p1 .card {
+    left: 0;
+    transform: translateX(0) translateY(-10px);
+  }
+  .p1:hover .card {
+    transform: translateX(0) translateY(0);
   }
 
-  .p3:hover .card,
+  /* Último card: alinhar à direita */
+  .p4 .card {
+    left: auto;
+    right: 0;
+    transform: translateX(0) translateY(-10px);
+  }
   .p4:hover .card {
-    transform: translateY(-50%) translateX(0);
+    transform: translateX(0) translateY(0);
   }
 }

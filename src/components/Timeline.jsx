@@ -23,7 +23,7 @@ const data = [
     year: "2026",
     title: "Pleno",
     desc: "Novos desafios, maior responsabilidade técnica e participação em decisões de arquitetura.",
-    tech: ["Node", "Flutter", "SQL Server"],
+    tech: ["Node", "Flutter", "SQL Server", "Typescript"],
   },
 ];
 
