@@ -1,4 +1,25 @@
-/* Article Cards - Mobile First */
+.articles-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(24px, 5vw, 40px);
+  justify-items: center;
+  padding: clamp(40px, 8vw, 80px) clamp(16px, 3vw, 20px);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .articles-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .articles-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 .fade-in-up {
   opacity: 0;
   transform: translateY(24px);
@@ -132,7 +153,6 @@
   white-space: nowrap;
 }
 
-/* TAG */
 .card-tag {
   display: inline-block;
   font-size: clamp(0.6rem, 1.3vw, 0.65rem);
@@ -224,7 +244,6 @@
   transform: translateX(4px);
 }
 
-/* Blog Container - "Ver todos artigos" button */
 .blog-container {
   margin-top: clamp(40px, 8vw, 70px);
   margin-bottom: clamp(40px, 8vw, 80px);
@@ -321,7 +340,6 @@
   }
 }
 
-/* Reduzir animação em mobile */
 @media (max-width: 640px) {
   @keyframes float {
     0%,
