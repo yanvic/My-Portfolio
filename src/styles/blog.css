@@ -1,3 +1,12 @@
+/* Fundo limpo para páginas de blog (sem triângulos, sem gradiente) */
+.blog-body {
+  background: var(--color-primary) !important;
+}
+
+.blog-body::before {
+  display: none !important;
+}
+
 .blog-page {
   max-width: 800px;
   margin: 0 auto;
