@@ -1,11 +1,11 @@
 ---
 import BlogNavbar from "../components/BlogNavbar.jsx";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import { translations } from "../i18n/translate.js";
 import "../styles/global.css";
 
 const { lang, title, description } = Astro.props;
-const t = translations[lang] || translations.en;
+const t = translations[lang as 'en' | 'pt'] || translations.en;
 
 const metaTitle = title || `Blog — ${t.hello}`;
 const metaDescription = description || t.presentation;
@@ -48,8 +48,16 @@ const ogImage = Astro.site ? new URL("/og-image.jpg", Astro.site) : null;
       referrerpolicy="no-referrer"
     />
 
-    <ViewTransitions />
+    <ClientRouter />
     <title>{metaTitle}</title>
+
+    <!-- Aplica o tema antes do CSS renderizar, evitando FOUC -->
+    <script is:inline>
+      (function () {
+        const theme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
   </head>
 
   <body class="blog-body">
@@ -58,7 +66,19 @@ const ogImage = Astro.site ? new URL("/og-image.jpg", Astro.site) : null;
 
     <script>
       function initScrollAnimations() {
-        const animatedElements = document.querySelectorAll('[data-animate]');
+        const elements = document.querySelectorAll('[data-animate]:not(.animate-in)');
+        const vh = window.innerHeight;
+
+        if (window.scrollY > 50) {
+          elements.forEach((el) => {
+            if (el.getBoundingClientRect().top < vh) {
+              el.style.transition = 'none';
+              el.classList.add('animate-in');
+              requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = ''; }));
+            }
+          });
+        }
+
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -68,9 +88,11 @@ const ogImage = Astro.site ? new URL("/og-image.jpg", Astro.site) : null;
               }
             });
           },
-          { threshold: 0.15, rootMargin: '0px 0px -100px 0px' }
+          { threshold: 0.05, rootMargin: '0px 0px -30px 0px' }
         );
-        animatedElements.forEach((el) => observer.observe(el));
+        elements.forEach((el) => {
+          if (!el.classList.contains('animate-in')) observer.observe(el);
+        });
       }
 
       if (document.readyState === 'loading') {
@@ -79,7 +101,21 @@ const ogImage = Astro.site ? new URL("/og-image.jpg", Astro.site) : null;
         initScrollAnimations();
       }
 
-      document.addEventListener('astro:page-load', initScrollAnimations);
+      document.addEventListener('astro:page-load', () => {
+        requestAnimationFrame(() => requestAnimationFrame(() => initScrollAnimations()));
+      });
+
+      // Preservar data-theme durante troca de página (ViewTransitions)
+      document.addEventListener('astro:before-swap', (ev) => {
+        const theme = localStorage.getItem('theme') || 'light';
+        ev.newDocument.documentElement.setAttribute('data-theme', theme);
+      });
+
+      // Garantia após a troca: aplica no documento atual
+      document.addEventListener('astro:after-swap', () => {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      });
     </script>
   </body>
 </html>

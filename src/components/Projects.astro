@@ -112,7 +112,7 @@ const projects: Project[] = Array.isArray(t?.projects_card)
 </section>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  function initProjects() {
     const miniCards = document.querySelectorAll(".mini-card");
     const progressDots = document.querySelectorAll(".progress-dot");
     const rotationStatus = document.getElementById("rotation-status");
@@ -229,5 +229,12 @@ const projects: Project[] = Array.isArray(t?.projects_card)
         startAutoRotate();
       }
     });
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProjects);
+  } else {
+    initProjects();
+  }
+  document.addEventListener('astro:page-load', initProjects);
 </script>

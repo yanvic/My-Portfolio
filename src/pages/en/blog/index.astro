@@ -1,0 +1,176 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/LayoutBlog.astro";
+import "../../../styles/blog.css";
+import { translations } from "../../../i18n/translate.js";
+
+const t = translations.en;
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+const tags = [...new Set(posts.map((p) => p.data.tag))];
+
+const postsData = posts.map((post) => ({
+  id: post.id.replace(/\.md$/, ""),
+  tag: post.data.tag,
+  date: post.data.date.getTime(),
+  dateFormatted: formatDate(post.data.date),
+  readTime: post.data.readTime,
+  title: post.data.title,
+  description: post.data.description,
+}));
+---
+
+<BaseLayout lang="en">
+  <div class="blog-page">
+    <a href="/en" class="blog-back">{t.blog_back}</a>
+
+    <h1 class="blog-page-title">Blog</h1>
+    <p class="blog-page-subtitle">{t.blog_subtitle}</p>
+
+    <div class="blog-sort-bar">
+      <span class="blog-sort-label">{t.blog_sort_label}</span>
+      <button class="blog-sort-btn active" data-sort="newest">{t.blog_sort_newest}</button>
+      <button class="blog-sort-btn" data-sort="oldest">{t.blog_sort_oldest}</button>
+      <div class="blog-sort-divider"></div>
+      {tags.map((tag) => (
+        <button class="blog-sort-btn blog-tag-btn" data-tag={tag}>{tag}</button>
+      ))}
+      <button class="blog-sort-btn blog-tag-btn blog-tag-clear hidden" data-tag="">{t.blog_clear_filter}</button>
+    </div>
+
+    <div class="blog-list" id="blog-list">
+      {postsData.map((post) => (
+        <a
+          href={`/blog/${post.id}`}
+          class="blog-post-card"
+          data-date={post.date}
+          data-tag={post.tag}
+          data-slug={post.id}
+        >
+          <div class="blog-post-meta">
+            <span class="blog-post-tag">{post.tag}</span>
+            <span class="blog-post-date">{post.dateFormatted}</span>
+            <span class="blog-post-read-time">{post.readTime}</span>
+            <span class="blog-post-views" data-views-slug={post.id}></span>
+          </div>
+          <h2 class="blog-post-title">{post.title}</h2>
+          <p class="blog-post-desc">{post.description}</p>
+          <span class="blog-post-arrow">{t.blog_read_article}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { translations } from "../../../i18n/translate.js";
+  const t = translations.en;
+
+  function initBlogSort() {
+    const list = document.getElementById("blog-list");
+    if (!list) return;
+
+    const sortBtns = document.querySelectorAll<HTMLButtonElement>("[data-sort]");
+    const tagBtns = document.querySelectorAll<HTMLButtonElement>("[data-tag]");
+    const clearBtn = document.querySelector<HTMLButtonElement>(".blog-tag-clear");
+
+    let currentSort = "newest";
+    let currentTag = "";
+
+    function getCards() {
+      return Array.from(list!.querySelectorAll<HTMLElement>(".blog-post-card"));
+    }
+
+    function render() {
+      let cards = getCards();
+
+      if (currentTag) {
+        cards.forEach((c) => {
+          c.style.display = c.dataset.tag === currentTag ? "" : "none";
+        });
+      } else {
+        cards.forEach((c) => (c.style.display = ""));
+      }
+
+      const visible = cards.filter((c) => c.style.display !== "none");
+      visible.sort((a, b) => {
+        const da = Number(a.dataset.date);
+        const db = Number(b.dataset.date);
+        return currentSort === "newest" ? db - da : da - db;
+      });
+
+      visible.forEach((c) => list!.appendChild(c));
+    }
+
+    sortBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        currentSort = btn.dataset.sort!;
+        sortBtns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        render();
+      });
+    });
+
+    tagBtns.forEach((btn) => {
+      if (btn.classList.contains("blog-tag-clear")) return;
+      btn.addEventListener("click", () => {
+        if (currentTag === btn.dataset.tag) {
+          currentTag = "";
+          btn.classList.remove("active");
+          clearBtn?.classList.add("hidden");
+        } else {
+          currentTag = btn.dataset.tag!;
+          tagBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          clearBtn?.classList.remove("hidden");
+        }
+        render();
+      });
+    });
+
+    clearBtn?.addEventListener("click", () => {
+      currentTag = "";
+      tagBtns.forEach((b) => b.classList.remove("active"));
+      clearBtn.classList.add("hidden");
+      render();
+    });
+  }
+
+  async function initViewCounts() {
+    try {
+      const res = await fetch("/api/views");
+      const counts: Record<string, number> = await res.json();
+      document.querySelectorAll<HTMLElement>("[data-views-slug]").forEach((el) => {
+        const slug = el.dataset.viewsSlug!;
+        const count = counts[slug];
+        if (count) {
+          el.textContent = `· ${count} ${count === 1 ? t.blog_views_one : t.blog_views_many}`;
+        }
+      });
+    } catch {}
+  }
+
+  function init() {
+    initBlogSort();
+    initViewCounts();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  document.addEventListener("astro:page-load", init);
+</script>

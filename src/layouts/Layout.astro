@@ -1,14 +1,14 @@
 ---
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.astro";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import { translations } from "../i18n/translate.js";
 import "../styles/global.css";
 
 const { lang, title, description } = Astro.props;
 
 // Triângulos de fundo global
-const TOTAL_TRIANGLES = 200;
+const TOTAL_TRIANGLES = 80;
 const triangles = Array.from({ length: TOTAL_TRIANGLES }).map((_, i) => {
   const size = Math.random() * 40 + 10;
   const x = Math.random() * 1000 - 500;
@@ -25,7 +25,7 @@ const triangles = Array.from({ length: TOTAL_TRIANGLES }).map((_, i) => {
     "--d": `${i * -0.05}s`,
   };
 });
-const t = translations[lang] || translations.en;
+const t = translations[lang as 'en' | 'pt'] || translations.en;
 
 // SEO defaults
 const metaTitle = title || `${t.hello}`;
@@ -75,8 +75,16 @@ const ogImage = Astro.site ? new URL("/og-image.jpg", Astro.site) : null;
       referrerpolicy="no-referrer"
     />
 
-    <ViewTransitions />
+    <ClientRouter />
     <title>{metaTitle}</title>
+
+    <!-- Aplica o tema antes do CSS renderizar, evitando FOUC -->
+    <script is:inline>
+      (function () {
+        const theme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
   </head>
 
   
@@ -95,7 +103,19 @@ const ogImage = Astro.site ? new URL("/og-image.jpg", Astro.site) : null;
     <script>
       // Scroll Reveal Animation System
       function initScrollAnimations() {
-        const animatedElements = document.querySelectorAll('[data-animate]');
+        const elements = document.querySelectorAll('[data-animate]:not(.animate-in)');
+        const vh = window.innerHeight;
+
+        // Se scroll foi restaurado (back-navigation), mostrar tudo acima/dentro do viewport sem animação
+        if (window.scrollY > 50) {
+          elements.forEach((el) => {
+            if (el.getBoundingClientRect().top < vh) {
+              el.style.transition = 'none';
+              el.classList.add('animate-in');
+              requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = ''; }));
+            }
+          });
+        }
 
         const observer = new IntersectionObserver(
           (entries) => {
@@ -106,26 +126,36 @@ const ogImage = Astro.site ? new URL("/og-image.jpg", Astro.site) : null;
               }
             });
           },
-          {
-            threshold: 0.15,
-            rootMargin: '0px 0px -100px 0px'
-          }
+          { threshold: 0.05, rootMargin: '0px 0px -30px 0px' }
         );
 
-        animatedElements.forEach((el) => {
-          observer.observe(el);
+        elements.forEach((el) => {
+          if (!el.classList.contains('animate-in')) observer.observe(el);
         });
       }
 
-      // Executar quando o DOM estiver pronto
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initScrollAnimations);
       } else {
         initScrollAnimations();
       }
 
-      // Re-executar após navegação (caso use SPA-like navigation)
-      document.addEventListener('astro:page-load', initScrollAnimations);
+      // Double rAF: garante que o scroll foi restaurado antes de verificar posições
+      document.addEventListener('astro:page-load', () => {
+        requestAnimationFrame(() => requestAnimationFrame(() => initScrollAnimations()));
+      });
+
+      // Preservar data-theme durante troca de página (ViewTransitions)
+      document.addEventListener('astro:before-swap', (ev) => {
+        const theme = localStorage.getItem('theme') || 'light';
+        ev.newDocument.documentElement.setAttribute('data-theme', theme);
+      });
+
+      // Garantia após a troca: aplica no documento atual
+      document.addEventListener('astro:after-swap', () => {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      });
     </script>
   </body>
 </html>
