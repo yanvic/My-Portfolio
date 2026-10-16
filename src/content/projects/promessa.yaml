@@ -1,0 +1,12 @@
+# Para trocar a capa: substitua promessa.png nesta pasta (ideal 1200×630).
+order: 1
+image: ./promessa.png
+techs: [React, Vite, React Router, Pix]
+demo: https://promessacasamentos.com.br/
+text:
+  pt:
+    title: promessa
+    desc: Site de casamento pronto em uma tarde, com lista de presentes via Pix direto na conta do casal, confirmação de presença por família e painel de organização. Grátis.
+  en:
+    title: promessa
+    desc: A wedding website ready in an afternoon, with a gift list paid via Pix straight to the couple, RSVP by family and an organization dashboard. Free.

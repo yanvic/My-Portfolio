@@ -1,0 +1,88 @@
+---
+import { getCollection } from "astro:content";
+
+const { t } = Astro.props;
+
+const logos = import.meta.glob<{ default: ImageMetadata }>("../../assets/techs/*.avif", { eager: true });
+const logo = (file: string) => logos[`../../assets/techs/${file}.avif`]?.default.src;
+
+const techs = (await getCollection("techs")).sort((a, b) => a.data.order - b.data.order).map((x) => x.data);
+const row1 = techs.filter((x) => x.row === 1).map((x) => [x.name, x.logo]);
+const row2 = techs.filter((x) => x.row === 2).map((x) => [x.name, x.logo]);
+const rows = [{ label: t.about.row1, items: row1, rev: false }, { label: t.about.row2, items: row2, rev: true }];
+
+const icons = {
+  code: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+  chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  flag: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>',
+};
+---
+
+<section class="sec" id="about">
+  <div class="wrap">
+    <div class="sec-head" data-animate="fade-up"><h2>{t.about.title}<span class="dot">.</span></h2></div>
+    <div class="about">
+      <div data-animate="fade-left">
+        <p class="lead">{t.about.lead[0]}<em>{t.about.lead[1]}</em>{t.about.lead[2]}</p>
+        <p class="txt">{t.about.text}</p>
+      </div>
+      <div class="ways">
+        {t.about.ways.map((w, i) => (
+          <div class="card-box" data-animate="fade-right" data-delay={String(i * 100 + 100)}>
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={icons[w.icon]} /></span>
+            <div><h3>{w.title}</h3><p>{w.desc}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap" data-animate="fade-up">
+    {rows.map((row) => (
+      <>
+        <p class="mq-label">{row.label}</p>
+        <div class={`mq ${row.rev ? "rev" : ""}`}>
+          <div class="mq-track">
+            {[0, 1].map((copy) =>
+              row.items.map(([name, file]) => (
+                <div class="tech" aria-hidden={copy === 1 ? "true" : undefined}>
+                  <span><img src={logo(file)} alt="" width="30" height="30" loading="lazy" /></span>{name}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </>
+    ))}
+  </div>
+</section>
+
+<style>
+  .about { display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; align-items: start; margin-bottom: 56px; }
+  .lead { margin: 0 0 16px; font-size: clamp(26px, 3.4vw, 40px); line-height: 1.18; font-weight: 600; letter-spacing: -.03em; }
+  .lead em { font-style: normal; background: linear-gradient(transparent 60%, color-mix(in srgb, var(--accent) 35%, transparent) 60%); }
+  .txt { margin: 0; color: var(--muted); font-size: 18px; max-width: 52ch; }
+  .ways { display: flex; flex-direction: column; gap: 12px; }
+  .ways > div { display: flex; gap: 14px; padding: 18px 20px; }
+  .ways .ic { flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--accent-soft); color: var(--accent-ink); }
+  .ways > div:nth-child(2) .ic { background: var(--sky-soft); }
+  .ways h3 { margin: 0 0 2px; font-size: 18px; letter-spacing: -.01em; }
+  .ways p { margin: 0; color: var(--muted); font-size: 15px; }
+  @media (max-width: 860px) { .about { grid-template-columns: 1fr; gap: 28px; } }
+
+  .mq-label { font-family: var(--mono); font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+  .mq + .mq-label { margin-top: 18px; }
+  .mq { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); padding: 6px 0; }
+  .mq-track { display: flex; gap: 14px; width: max-content; animation: run 46s linear infinite; }
+  .mq.rev .mq-track { animation-direction: reverse; animation-duration: 52s; }
+  .mq:hover .mq-track { animation-play-state: paused; }
+  @keyframes run { to { transform: translateX(calc(-50% - 7px)); } }
+  .tech { display: flex; align-items: center; gap: 12px; padding: 10px 18px 10px 10px; border-radius: 16px; background: var(--paper); border: 1px solid var(--line); white-space: nowrap; font-weight: 600; }
+  .tech span { width: 44px; height: 44px; border-radius: 12px; background: #fff; display: flex; align-items: center; justify-content: center; border: 1px solid #ECEFF3; }
+  .tech img { width: 30px; height: 30px; object-fit: contain; }
+  @media (prefers-reduced-motion: reduce) {
+    .mq { -webkit-mask-image: none; mask-image: none; }
+    .mq-track { animation: none; flex-wrap: wrap; width: auto; }
+    .mq-track [aria-hidden="true"] { display: none; }
+  }
+</style>

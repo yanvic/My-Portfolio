@@ -1,0 +1,158 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+
+const { t, lang } = Astro.props;
+const items = (await getCollection("projects"))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map(({ id, data }) => ({ ...data, ...data.text[lang], id }));
+const waves = [18,54,76,78,62,35,23,34,31,20,24,22,27,49,68,71,55,23,49,77,85,72,44,22,42,46,37,24,19,21,36,54,62,53,27,43,74,87,79,51];
+const sheet = ["h","h","h","h","","v","v","","","v","","","","","v","","","v","v","","","v","","","","","v",""];
+---
+
+<section class="sec" id="projects">
+  <div class="wrap">
+    <div class="sec-head" data-animate="fade-up">
+      <h2>{t.projects.title}<span class="dot">.</span></h2>
+      <p>{t.projects.subtitle}</p>
+    </div>
+
+    <div class:list={["bento", { single: items.length === 1 }]} id="bento">
+      {items.map((p, i) => (
+        <article class={`card-box ${i === 0 ? "big" : ""}`} data-animate="fade-up" data-delay={String(i * 100)}>
+          <div class:list={["ill", { shot: p.image }]}>
+            {p.image && <Image src={p.image} alt={p.title} widths={[480, 800, 1200]} sizes="(max-width: 760px) 86vw, 640px" />}
+            {!p.image && p.illustration === "duel" && (
+              <div class="duel" aria-hidden="true">
+                <div class="cardx c1"><small>overall</small><b>87</b><small class="pos">MEI</small></div>
+                <span class="vs">vs</span>
+                <div class="cardx c2">?</div>
+              </div>
+            )}
+            {!p.image && p.illustration === "ffmpeg" && (
+              <div class="ff" aria-hidden="true">
+                <div class="wave">{waves.map((h) => <i style={`height:${h}%`}></i>)}</div>
+                <div class="track"></div>
+                <code>$ ffmpeg -i entrada.mp4 saida.webm</code>
+              </div>
+            )}
+            {!p.image && p.illustration === "sheet" && (
+              <div class="xl" aria-hidden="true">
+                <div class="sheet">{sheet.map((c) => <i class={c}></i>)}</div>
+                <div class="pdf"><i></i><i></i><i></i><i></i><i></i></div>
+              </div>
+            )}
+          </div>
+          <div class="pbody">
+            <h3>{p.title}</h3>
+            <p>{p.desc}</p>
+            <div class="tags">{p.techs.map((tech) => <span class="tag">{tech}</span>)}</div>
+            <div class="btns">
+              {p.demo && <a class="btn primary sm" href={p.demo} target="_blank" rel="noopener" data-track={`project_demo:${p.id}`}>{t.projects.demo}</a>}
+              {p.code && <a class={`btn sm ${p.demo ? "" : "primary"}`} href={p.code} target="_blank" rel="noopener" data-track={`project_code:${p.id}`}>{t.projects.code}</a>}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    {items.length > 1 && <div class="car-ctl">
+      <div class="dots" id="bdots" aria-hidden="true">{items.map((_, i) => <i class={i === 0 ? "on" : ""}></i>)}</div>
+      <div class="btns">
+        <button class="icon-btn" type="button" data-b="-1" aria-label={t.ui.prev}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+        <button class="icon-btn" type="button" data-b="1" aria-label={t.ui.next}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg></button>
+      </div>
+    </div>}
+  </div>
+</section>
+
+<style>
+  .bento { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }
+  .bento article { overflow: hidden; display: flex; flex-direction: column; transition: transform .3s, border-color .3s; }
+  .bento article:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+  .bento .big { grid-row: span 2; }
+  .bento .big .ill { flex: 1; min-height: 320px; }
+  .ill { background: var(--paper2); display: flex; align-items: center; justify-content: center; padding: 24px; min-height: 240px; overflow: hidden; position: relative; }
+  .ill::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 16px 16px; }
+  .ill > * { position: relative; }
+  .ill.shot { padding: 0; }
+  .ill.shot::before { display: none; }
+  .ill.shot :global(img) { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+  .pbody { padding: 24px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .pbody h3 { margin: 0; font-size: clamp(24px, 3vw, 32px); line-height: 1.05; letter-spacing: -.035em; font-weight: 800; }
+  .pbody p { margin: 0; color: var(--muted); }
+  .pbody .btns { margin-top: auto; padding-top: 4px; }
+
+  .duel { display: flex; align-items: center; gap: 14px; }
+  .cardx { width: 110px; height: 154px; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 22px -10px rgba(34, 40, 49, .45); transition: transform .4s; }
+  .cardx.c1 { background: linear-gradient(160deg, var(--sun), var(--warm)); color: #2A1530; transform: rotate(-6deg); }
+  .cardx.c1 b { font-size: 46px; line-height: .9; letter-spacing: -.04em; }
+  .cardx.c1 small { font-family: var(--mono); font-size: 11px; }
+  .cardx.c1 .pos { align-self: flex-end; font-weight: 700; }
+  .cardx.c2 { background: var(--plum); color: var(--accent); align-items: center; justify-content: center; transform: rotate(5deg); border: 3px dashed color-mix(in srgb, var(--accent) 60%, transparent); font-size: 52px; font-weight: 800; }
+  .bento article:hover .c1 { transform: rotate(-10deg) translateY(-4px); }
+  .bento article:hover .c2 { transform: rotate(9deg) translateY(-4px); }
+  .vs { font-family: var(--mono); font-weight: 700; color: var(--muted); }
+
+  .ff { width: 100%; max-width: 340px; background: var(--plum); border-radius: 12px; padding: 16px; color: var(--t-dim); font-family: var(--mono); font-size: 11px; }
+  .wave { display: flex; align-items: center; gap: 3px; height: 70px; }
+  .wave i { flex: 1; background: linear-gradient(var(--mint), var(--accent-2)); border-radius: 2px; }
+  .track { position: relative; height: 7px; border-radius: 4px; background: rgba(255, 255, 255, .12); margin: 12px 0; }
+  .track::before { content: ""; position: absolute; inset: 0 58% 0 0; background: var(--accent); border-radius: 4px; }
+
+  .xl { position: relative; width: 100%; max-width: 320px; height: 190px; }
+  .sheet { position: absolute; left: 0; top: 0; width: 78%; background: #fff; border: 1px solid #DDE3EA; border-radius: 8px; overflow: hidden; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .sheet i { height: 24px; border-right: 1px solid #E8ECF1; border-bottom: 1px solid #E8ECF1; }
+  .sheet i.h { background: #1F8F5F; }
+  .sheet i.v { background: linear-gradient(90deg, #DCEEF7 0 70%, transparent 70%); }
+  .pdf { position: absolute; right: 0; bottom: 0; width: 46%; height: 72%; background: #fff; border: 1px solid #DDE3EA; border-radius: 8px; padding: 14px 12px; transform: rotate(4deg); box-shadow: 0 14px 28px -14px rgba(34, 40, 49, .5); display: flex; flex-direction: column; gap: 7px; }
+  .pdf i { height: 6px; border-radius: 3px; background: #E8ECF1; }
+  .pdf i:first-child { height: 10px; width: 60%; background: #E5484D; }
+
+  /* projeto único: card horizontal */
+  .bento.single { grid-template-columns: 1fr; }
+  .bento.single article { display: grid; grid-template-columns: 1.2fr 1fr; align-items: stretch; }
+  /* imagem inteira, emoldurada, sem corte */
+  .bento.single .ill.shot { padding: clamp(18px, 3vw, 32px); min-height: 0; }
+  .bento.single .ill.shot::before { display: block; }
+  .bento.single .ill.shot :global(img) { position: relative; inset: auto; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 18px 36px -18px rgba(34, 40, 49, .45); transition: transform .4s; }
+  .bento.single article:hover .ill.shot :global(img) { transform: scale(1.02); }
+  .bento.single .pbody { padding: clamp(24px, 4vw, 44px); }
+  .bento.single .pbody h3 { font-size: clamp(30px, 4vw, 44px); }
+  .bento.single .pbody .btns { margin-top: 8px; }
+
+  .car-ctl { display: none; }
+  @media (max-width: 860px) {
+    .bento.single article { grid-template-columns: 1fr; }
+
+  }
+  @media (max-width: 760px) {
+    .bento.single { display: grid; margin: 0; padding: 0; }
+    .bento.single article { flex: none; }
+    .bento:not(.single) { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding: 4px 20px 18px; margin: 0 -20px; scrollbar-width: none; }
+    .bento::-webkit-scrollbar { display: none; }
+    .bento article { flex: 0 0 86%; scroll-snap-align: center; }
+    .bento .big .ill, .bento .ill { flex: none; min-height: 230px; }
+    .bento article:hover { transform: none; }
+    .car-ctl { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 4px; }
+    .dots { display: flex; gap: 8px; }
+    .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: width .2s; }
+    .dots i.on { background: var(--accent); width: 22px; border-radius: 4px; }
+  }
+</style>
+
+<script>
+  import { slider } from "../../lib/slider";
+
+  function initProjects() {
+    const bento = document.getElementById("bento");
+    const dots = document.getElementById("bdots");
+    if (!bento || !dots) return;
+    const s = slider(bento, (i) => Array.from(dots.children).forEach((d, k) => d.classList.toggle("on", k === i)));
+    document.querySelectorAll<HTMLButtonElement>("[data-b]").forEach((b) =>
+      b.addEventListener("click", () => s.go(s.idx() + parseInt(b.dataset.b || "0", 10)))
+    );
+  }
+
+  document.addEventListener("astro:page-load", initProjects);
+</script>

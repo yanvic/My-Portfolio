@@ -1,0 +1,115 @@
+---
+import Logo from "./Logo.astro";
+import { translations } from "../i18n/translate.js";
+import { otherLangPath } from "../lib/routes";
+import { getPosts } from "../lib/posts";
+
+const { lang = "pt", variant = "home" } = Astro.props;
+const t = translations[lang] || translations.pt;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const { lang: nextLang, href: langHref } = otherLangPath(Astro.url.pathname, lang);
+const homeHref = `${base}/${lang}`;
+// "Blog" só entra no menu quando houver artigo publicado
+const hasPosts = (await getPosts()).length > 0;
+const sections = ["projects", "about", "career", "offscreen", ...(hasPosts ? ["blog"] : []), "contact"];
+---
+
+<header class="float-bar" id="float-bar">
+  <nav class="pill nav-pill" aria-label={lang === "pt" ? "Seções" : "Sections"}>
+    <a class="brand" href={variant === "home" ? "#home" : homeHref} aria-label="yan.dev">
+      <Logo id={`hdr-${variant}`} size={30} />
+      <span class="brand-txt">yan<b>.dev</b></span>
+    </a>
+
+    {variant === "home" ? (
+      <>
+        <ul class="nav" id="nav">
+          {sections.map((id) => <li><a href={`#${id}`} data-sec={id} data-track={`nav:${id}`}>{t.nav[id]}</a></li>)}
+        </ul>
+        <button class="menu-btn" id="menu" type="button" aria-label={t.ui.menu} aria-expanded="false" aria-controls="nav">
+          <span></span><span></span><span></span>
+        </button>
+      </>
+    ) : (
+      <>
+        <span class="crumb">/blog</span>
+        <a class="pill-link" href={homeHref} aria-label={t.ui.portfolio}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          <span class="t">{t.ui.portfolio}</span>
+        </a>
+      </>
+    )}
+  </nav>
+
+  <div class="pill actions-pill">
+    <button class="theme-switch" id="theme" type="button" data-track="theme_toggle" role="switch" aria-checked="false" aria-label={t.ui.theme}>
+      <span class="ts-icon sun"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4" /></svg></span>
+      <span class="ts-icon moon"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg></span>
+      <span class="ts-thumb"></span>
+    </button>
+    <a class="lang-chip" href={langHref} data-lang={nextLang} data-track={`lang:${nextLang}`} aria-label={t.ui.lang} title={t.ui.lang}>{nextLang.toUpperCase()}</a>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    const root = document.documentElement;
+
+    const themeBtn = document.getElementById("theme");
+    const syncSwitch = () => themeBtn?.setAttribute("aria-checked", root.getAttribute("data-theme") === "dark" ? "true" : "false");
+    syncSwitch();
+    themeBtn?.addEventListener("click", () => {
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch {}
+      syncSwitch();
+    });
+
+    // Pílula ganha mais blur/sombra depois de rolar
+    const bar = document.getElementById("float-bar");
+    const onScroll = () => bar?.classList.toggle("scrolled", window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+
+    const menu = document.getElementById("menu");
+    const nav = document.getElementById("nav");
+    if (menu && nav) {
+      menu.addEventListener("click", () => {
+        const open = nav.classList.toggle("open");
+        menu.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      document.addEventListener("click", (e) => {
+        if (nav.classList.contains("open") && !(e.target as HTMLElement).closest("#float-bar")) {
+          nav.classList.remove("open");
+          menu.setAttribute("aria-expanded", "false");
+        }
+      });
+      nav.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).tagName === "A") {
+          nav.classList.remove("open");
+          menu.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+
+    // Destaca a seção visível no menu
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-sec]"));
+    if (!links.length || !("IntersectionObserver" in window)) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.dataset.sec === en.target.id));
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    links.forEach((a) => {
+      const el = document.getElementById(a.dataset.sec!);
+      if (el) obs.observe(el);
+    });
+  }
+
+  document.addEventListener("astro:page-load", initHeader);
+</script>

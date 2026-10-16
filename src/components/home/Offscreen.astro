@@ -1,0 +1,154 @@
+---
+import { getCollection } from "astro:content";
+import Bookshelf from "./Bookshelf.astro";
+import profile from "../../assets/hobbies/profile.avif";
+
+const { t, lang } = Astro.props;
+const o = t.offscreen;
+
+const files = import.meta.glob<{ default: ImageMetadata }>("../../assets/hobbies/*.{avif,jpg,jpeg,png,webp}", { eager: true });
+const slides = (await getCollection("photos"))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map(({ id, data }) => {
+    const txt = data.text[lang];
+    return { id, chip: txt.chip, alt: txt.alt, cap: ` ${txt.caption}`, meta: txt.meta, src: files[`../../assets/hobbies/${data.file}`]?.default.src };
+  })
+  .filter((s) => s.src);
+
+---
+
+<section class="sec" id="offscreen">
+  <div class="wrap">
+    <div class="sec-head" data-animate="fade-up"><h2>{o.title}<span class="dot">.</span></h2></div>
+    <div class="offscreen">
+      <div class="side" data-animate="fade-left">
+        <p>{o.text}</p>
+        <div class="chips" id="chips" role="group" aria-label={o.chipsLabel}>
+          {slides.map((s) => <button type="button" aria-pressed="false" data-track={`photo:${s.id}`}>{s.chip}</button>)}
+        </div>
+        <Bookshelf t={t} lang={lang} />
+      </div>
+
+      <div class="phone-col" data-animate="fade-right" data-delay="100">
+        <div class="phone">
+          <div class="screen">
+            <span class="island" aria-hidden="true"></span>
+            <div class="sbar" aria-hidden="true">
+              <span>9:41</span>
+              <svg width="54" height="12" viewBox="0 0 54 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor" /><rect x="5" y="5" width="3" height="7" rx="1" fill="currentColor" /><rect x="10" y="2" width="3" height="10" rx="1" fill="currentColor" /><rect x="28" y="1" width="22" height="10" rx="3" fill="none" stroke="currentColor" /><rect x="30" y="3" width="15" height="6" rx="1.5" fill="currentColor" /></svg>
+            </div>
+            <div class="ig-top">
+              <div class="avatar"><img src={profile.src} alt="" width="32" height="32" /></div>
+              <div><b>yanvic</b><small>Fortaleza, CE</small></div>
+              <svg class="more" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /></svg>
+            </div>
+            <div class="media">
+              <span class="count" id="count" aria-live="polite">1/{slides.length}</span>
+              <div class="slides" id="slides" tabindex="0" aria-label={o.photosLabel}>
+                {slides.map((s, i) => (
+                  <figure><img src={s.src} alt={s.alt} loading={i === 0 ? "eager" : "lazy"} /></figure>
+                ))}
+              </div>
+            </div>
+            <div class="ig-act">
+              <button type="button" class="like" id="like" data-track="photo_like" aria-pressed="false" aria-label={o.like}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg></button>
+              <span class="ig-ic" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg></span>
+              <span class="ig-ic" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg></span>
+              <div class="pdots" id="pdots" aria-hidden="true">{slides.map(() => <i></i>)}</div>
+            </div>
+            <div class="ig-cap" id="cap"></div>
+          </div>
+        </div>
+        <div class="phone-ctl">
+          <button class="icon-btn" type="button" data-p="-1" aria-label={t.ui.prev}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <button class="icon-btn" type="button" data-p="1" aria-label={t.ui.next}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="application/json" id="caps" set:html={JSON.stringify(slides.map((s) => ({ t: s.cap, d: s.meta })))} />
+</section>
+
+<style>
+  .offscreen { display: grid; grid-template-columns: 1fr auto; gap: 56px; align-items: center; }
+  .side { display: flex; flex-direction: column; gap: 18px; }
+  .side > p { margin: 0; color: var(--muted); font-size: 18px; max-width: 44ch; }
+  @media (max-width: 860px) { .offscreen { grid-template-columns: 1fr; gap: 32px; } .phone-col { order: -1; } }
+
+  .phone-col { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .phone { width: 340px; max-width: 100%; border-radius: 46px; padding: 12px; background: #15181D; box-shadow: 0 30px 60px -24px rgba(34, 40, 49, .6), inset 0 0 0 2px #2E343D; }
+  .screen { border-radius: 36px; overflow: hidden; background: #fff; color: #121015; position: relative; }
+  .sbar { display: flex; align-items: center; justify-content: space-between; height: 40px; padding: 0 24px; font-size: 13px; font-weight: 700; }
+  .island { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 92px; height: 24px; border-radius: 14px; background: #15181D; }
+  .ig-top { display: flex; align-items: center; gap: 10px; padding: 8px 14px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; padding: 2px; background: conic-gradient(from 200deg, #FFD66B, #FFAE8F, #E55BA6, #C58AFF, #91C8E4, #FFD66B); }
+  .avatar img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
+  .ig-top b { font-size: 14px; display: block; line-height: 1.1; }
+  .ig-top small { font-size: 12px; color: #6B6478; }
+  .ig-top .more { margin-left: auto; }
+  .media { position: relative; }
+  .slides { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; aspect-ratio: 4/5; background: #000; }
+  .slides::-webkit-scrollbar { display: none; }
+  .slides figure { margin: 0; flex: 0 0 100%; scroll-snap-align: start; }
+  .slides img { width: 100%; height: 100%; object-fit: cover; }
+  .count { position: absolute; top: 10px; right: 10px; padding: 3px 9px; border-radius: 999px; background: rgba(18, 16, 21, .7); color: #fff; font-size: 12px; font-weight: 600; z-index: 1; }
+  .ig-act { display: flex; align-items: center; gap: 14px; padding: 10px 14px 4px; }
+  .ig-act button { width: 44px; height: 44px; margin: -10px -8px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #121015; }
+  .ig-ic { display: flex; color: #121015; }
+  .like[aria-pressed="true"] svg { fill: #E5484D; stroke: #E5484D; animation: pop .35s ease; }
+  @keyframes pop { 50% { transform: scale(1.25); } }
+  .pdots { display: flex; gap: 4px; margin: 0 auto; padding-right: 44px; }
+  .pdots :global(i) { width: 6px; height: 6px; border-radius: 50%; background: #CFD5DE; }
+  .pdots :global(i.on) { background: #A35BF0; }
+  .ig-cap { padding: 6px 14px 18px; font-size: 14px; line-height: 1.45; min-height: 84px; }
+  .ig-cap :global(b) { margin-right: 4px; }
+  .ig-cap :global(small) { display: block; color: #6B6478; font-size: 12px; margin-top: 4px; }
+  .phone-ctl { display: flex; gap: 10px; }
+</style>
+
+<script>
+  import { slider } from "../../lib/slider";
+
+  function initOffscreen() {
+    const slides = document.getElementById("slides");
+    const capsEl = document.getElementById("caps");
+    if (!slides || !capsEl) return;
+    const caps: { t: string; d: string }[] = JSON.parse(capsEl.textContent || "[]");
+    const pd = document.getElementById("pdots")!;
+    const cap = document.getElementById("cap")!;
+    const count = document.getElementById("count")!;
+    const like = document.getElementById("like")!;
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>("#chips button"));
+
+    function show(i: number) {
+      Array.from(pd.children).forEach((d, k) => d.classList.toggle("on", k === i));
+      chips.forEach((c, k) => c.setAttribute("aria-pressed", k === i ? "true" : "false"));
+      count.textContent = `${i + 1}/${caps.length}`;
+      cap.textContent = "";
+      const b = document.createElement("b");
+      b.textContent = "yanvic";
+      cap.appendChild(b);
+      cap.appendChild(document.createTextNode(caps[i].t));
+      const s = document.createElement("small");
+      s.textContent = caps[i].d;
+      cap.appendChild(s);
+      like.setAttribute("aria-pressed", "false");
+    }
+
+    const ps = slider(slides, show);
+    show(0);
+    document.querySelectorAll<HTMLButtonElement>("[data-p]").forEach((b) =>
+      b.addEventListener("click", () => ps.go(ps.idx() + parseInt(b.dataset.p || "0", 10)))
+    );
+    chips.forEach((c, k) => c.addEventListener("click", () => ps.go(k)));
+    slides.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); ps.go(ps.idx() + 1); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); ps.go(ps.idx() - 1); }
+    });
+    like.addEventListener("click", () => like.setAttribute("aria-pressed", like.getAttribute("aria-pressed") === "true" ? "false" : "true"));
+    slides.addEventListener("dblclick", () => like.setAttribute("aria-pressed", "true"));
+
+  }
+
+  document.addEventListener("astro:page-load", initOffscreen);
+</script>

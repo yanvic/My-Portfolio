@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yanvic.github.io/My-Portfolio/sitemap-index.xml

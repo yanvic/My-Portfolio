@@ -1,121 +1,38 @@
 ---
-import BlogNavbar from "../components/BlogNavbar.jsx";
-import { ClientRouter } from "astro:transitions";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 import { translations } from "../i18n/translate.js";
 import "../styles/global.css";
+import "../styles/blog.css";
 
-const { lang, title, description } = Astro.props;
-const t = translations[lang as 'en' | 'pt'] || translations.en;
-
-const metaTitle = title || `Blog — ${t.hello}`;
-const metaDescription = description || t.presentation;
-const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : null;
-const ogImage = Astro.site ? new URL("/og-image.jpg", Astro.site) : null;
+const { lang = "pt", title, description, type } = Astro.props;
+const t = translations[lang as "en" | "pt"] || translations.pt;
 ---
 
-<html lang={lang}>
+<html lang={lang === "pt" ? "pt-BR" : "en"}>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={metaDescription} />
-    <meta name="keywords" content="blog, portfolio, developer, web development, software engineer" />
-    <meta name="author" content="Yan Silva" />
-
-    <meta property="og:type" content="article" />
-    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
-    <meta property="og:title" content={metaTitle} />
-    <meta property="og:description" content={metaDescription} />
-    {ogImage && <meta property="og:image" content={ogImage} />}
-    <meta property="og:locale" content={lang === "pt" ? "pt_BR" : "en_US"} />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    {canonicalURL && <meta name="twitter:url" content={canonicalURL} />}
-    <meta name="twitter:title" content={metaTitle} />
-    <meta name="twitter:description" content={metaDescription} />
-    {ogImage && <meta name="twitter:image" content={ogImage} />}
-
-    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
-
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-
-    <ClientRouter />
-    <title>{metaTitle}</title>
-
-    <!-- Aplica o tema antes do CSS renderizar, evitando FOUC -->
-    <script is:inline>
-      (function () {
-        const theme = localStorage.getItem("theme") || "light";
-        document.documentElement.setAttribute("data-theme", theme);
-      })();
-    </script>
+    <BaseHead lang={lang} title={title || t.meta.blogTitle} description={description || t.blog.archiveSubtitle} type={type} />
   </head>
 
   <body class="blog-body">
-    <BlogNavbar lang={lang} client:load />
-    <slot />
+    <div class="bg-aura" aria-hidden="true"></div>
+    <div class="progress" aria-hidden="true"><i id="prog"></i></div>
+
+    <Header lang={lang} variant="blog" />
+    <main class="wrap">
+      <slot />
+    </main>
+    <Footer t={t} />
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
-      function initScrollAnimations() {
-        const elements = document.querySelectorAll('[data-animate]:not(.animate-in)');
-        const vh = window.innerHeight;
-
-        if (window.scrollY > 50) {
-          elements.forEach((el) => {
-            if (el.getBoundingClientRect().top < vh) {
-              el.style.transition = 'none';
-              el.classList.add('animate-in');
-              requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = ''; }));
-            }
-          });
-        }
-
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                observer.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.05, rootMargin: '0px 0px -30px 0px' }
-        );
-        elements.forEach((el) => {
-          if (!el.classList.contains('animate-in')) observer.observe(el);
-        });
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initScrollAnimations);
-      } else {
-        initScrollAnimations();
-      }
-
-      document.addEventListener('astro:page-load', () => {
-        requestAnimationFrame(() => requestAnimationFrame(() => initScrollAnimations()));
-      });
-
-      // Preservar data-theme durante troca de página (ViewTransitions)
-      document.addEventListener('astro:before-swap', (ev) => {
-        const theme = localStorage.getItem('theme') || 'light';
-        ev.newDocument.documentElement.setAttribute('data-theme', theme);
-      });
-
-      // Garantia após a troca: aplica no documento atual
-      document.addEventListener('astro:after-swap', () => {
-        const theme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', theme);
-      });
+      import { initReveal, keepTheme } from "../lib/client";
+      import { initTracking } from "../lib/track";
+      document.addEventListener("astro:page-load", () => requestAnimationFrame(() => requestAnimationFrame(initReveal)));
+      keepTheme();
+      // Rastreio nunca pode quebrar o site
+      try { initTracking(); } catch {}
     </script>
   </body>
 </html>

@@ -1,0 +1,88 @@
+---
+const { t } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<section class="hero" id="home">
+  <div class="wrap">
+    <span class="status" data-animate="fade-down"><i></i>{t.hero.status}</span>
+    <h1 class="type" aria-label="Yan Silva">
+      <span class="tw" aria-hidden="true"><span class="tw-a">Yan </span><span class="tw-b">Silva</span></span><span class="caret" aria-hidden="true"></span>
+    </h1>
+    <p data-animate="fade-up" data-delay="200">{t.hero.subtitle}</p>
+    <div class="btns" data-animate="fade-up" data-delay="300">
+      <a class="btn primary" href="#projects" data-track="cta_projects">{t.hero.ctaProjects}</a>
+      <a class="btn" href={`${base}/cv/curriculo.pdf`} target="_blank" rel="noopener" data-track="cv_download">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14" /></svg>
+        {t.hero.ctaResume}
+      </a>
+    </div>
+  </div>
+  <a class="scroll-cue" href="#projects" data-track="scroll_cue">
+    <span>{t.hero.scroll}</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+  </a>
+</section>
+
+<style>
+  .hero { min-height: min(92vh, 820px); display: flex; align-items: center; padding: 72px 0 96px; }
+  .hero .wrap { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .hero h1 {
+    margin: 0;
+    min-height: 1em;
+    font-size: clamp(54px, 10.5vw, 136px);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -.055em;
+    white-space: nowrap;
+  }
+  .tw-b {
+    background: linear-gradient(110deg, var(--ink) 20%, var(--accent) 60%, var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .caret {
+    display: inline-block;
+    width: .07em;
+    height: .82em;
+    margin-left: .06em;
+    vertical-align: -.04em;
+    border-radius: 2px;
+    background: linear-gradient(var(--accent-2), var(--accent));
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .caret { animation: none; } }
+  .hero p { margin: 0; font-size: clamp(18px, 2.2vw, 22px); line-height: 1.5; max-width: 34ch; color: var(--muted); text-wrap: balance; }
+  .hero .btns { justify-content: center; }
+  .scroll-cue { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; font-family: var(--mono); font-size: 12px; color: var(--muted); transition: color .2s; }
+  .scroll-cue:hover { color: var(--accent-ink); }
+  .scroll-cue svg { animation: cue 1.8s ease-in-out infinite; color: var(--accent); }
+  @keyframes cue { 50% { transform: translateY(5px); } }
+  @media (prefers-reduced-motion: reduce) { .scroll-cue svg { animation: none; } }
+  @media (max-height: 640px) { .scroll-cue { display: none; } }
+</style>
+
+<script>
+  // Efeito de digitação: apaga o texto renderizado e digita letra por letra
+  function typeHero() {
+    const a = document.querySelector<HTMLElement>(".hero .tw-a");
+    const b = document.querySelector<HTMLElement>(".hero .tw-b");
+    if (!a || !b || a.dataset.typed) return;
+    a.dataset.typed = "1";
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const parts: [HTMLElement, string][] = [[a, a.textContent || ""], [b, b.textContent || ""]];
+    parts.forEach(([el]) => (el.textContent = ""));
+    let p = 0;
+    let i = 0;
+    const tick = () => {
+      const [el, text] = parts[p];
+      el.textContent = text.slice(0, ++i);
+      if (i >= text.length) { p++; i = 0; }
+      if (p < parts.length) setTimeout(tick, 70 + Math.random() * 90);
+    };
+    setTimeout(tick, 350);
+  }
+  document.addEventListener("astro:page-load", typeHero);
+</script>

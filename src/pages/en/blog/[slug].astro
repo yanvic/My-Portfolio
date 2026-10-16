@@ -1,0 +1,18 @@
+---
+import LayoutBlog from "../../../layouts/LayoutBlog.astro";
+import Article from "../../../components/blog/Article.astro";
+import { getPosts, slugOf } from "../../../lib/posts";
+import { translations } from "../../../i18n/translate.js";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: slugOf(post.id) }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const t = translations.en;
+---
+
+<LayoutBlog lang="en" title={`${post.data.title} · Blog yan.dev`} description={post.data.description} type="article">
+  <Article post={post} t={t} />
+</LayoutBlog>

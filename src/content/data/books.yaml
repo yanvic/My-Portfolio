@@ -1,0 +1,57 @@
+# Estante em "Fora da tela".
+# status: reading (lendo) | read (lido) | queue (na fila)
+# progress: % lido (só para reading)
+# review: slug do artigo de review em src/content/blog (ex.: review-codigo-limpo)
+# note: frase curta em pt/en mostrada enquanto não há review
+# width/height: tamanho da lombada em px · lean: true deixa o livro inclinado
+
+- id: pragmatico
+  order: 1
+  title: O Programador Pragmático
+  author: Hunt e Thomas
+  color: "#C58AFF"
+  textColor: "#1D1230"
+  width: 34
+  height: 212
+  status: queue
+
+- id: codigo-limpo
+  order: 2
+  title: Código Limpo
+  author: Robert C. Martin
+  color: "#FFD66B"
+  textColor: "#2A1530"
+  width: 30
+  height: 184
+  status: queue
+
+- id: rust-book
+  order: 3
+  title: The Rust Book
+  author: Klabnik e Nichols
+  color: "#E5484D"
+  textColor: "#FFFFFF"
+  width: 38
+  height: 200
+  status: queue
+
+- id: algoritmos
+  order: 4
+  title: Entendendo Algoritmos
+  author: Aditya Bhargava
+  color: "#5FD9B5"
+  textColor: "#0F2A22"
+  width: 32
+  height: 168
+  lean: true
+  status: queue
+
+- id: ddia
+  order: 5
+  title: Designing Data-Intensive Apps
+  author: Martin Kleppmann
+  color: "#91C8E4"
+  textColor: "#0F2230"
+  width: 42
+  height: 220
+  status: queue

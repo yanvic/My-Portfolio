@@ -1,0 +1,238 @@
+---
+// Estante: status de leitura por livro e preview do review no blog
+import { getCollection } from "astro:content";
+import { getPosts, slugOf, blogBase } from "../../lib/posts";
+
+const { t, lang } = Astro.props;
+const o = t.offscreen;
+
+// Primeiro parágrafo de texto do markdown, sem sintaxe
+function excerpt(md = "", max = 240) {
+  const text = md
+    .replace(/```[\s\S]*?```/g, " ")
+    .split(/\n{2,}/)
+    .map((b) => b.trim())
+    .filter((b) => b && !/^(#|>|\||-|\*|\d+\.|!\[)/.test(b))
+    .join(" ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/[*_`~]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text.length > max ? text.slice(0, max).replace(/\s+\S*$/, "") + "…" : text;
+}
+
+const posts = await getPosts();
+const books = (await getCollection("books"))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map(({ id, data }) => {
+    const post = data.review ? posts.find((p) => slugOf(p.id) === data.review) : undefined;
+    if (data.review && !post) console.warn(`[books] review "${data.review}" de "${id}" não existe em src/content/blog`);
+    return {
+      id,
+      ...data,
+      note: data.note?.[lang],
+      review: post && {
+        href: `${blogBase(lang)}/${slugOf(post.id)}`,
+        slug: slugOf(post.id),
+        title: post.data.title,
+        readTime: post.data.readTime,
+        excerpt: excerpt(post.body) || post.data.description,
+      },
+    };
+  });
+
+const statuses = (["reading", "read", "queue"] as const)
+  .map((s) => ({ key: s, label: o.status[s], count: books.filter((b) => b.status === s).length }))
+  .filter((s) => s.count > 0);
+const first = books.find((b) => b.status === "reading") ?? books[0];
+---
+
+<div class="card-box shelf" id="shelf">
+  <div class="shelf-head">
+    <h3>{o.shelf}</h3>
+    {statuses.length > 1 && (
+      <div class="legend" role="group" aria-label={o.shelf}>
+        {statuses.map((s) => (
+          <button type="button" data-status={s.key} aria-pressed="false" data-track={`book_filter:${s.key}`}>
+            <i class={`dot st-${s.key}`}></i>{s.label} <span>{s.count}</span>
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+  <p class="shelf-hint">{o.shelfHint}</p>
+
+  <ul class="books" aria-label={o.shelf}>
+    {books.map((b) => (
+      <li>
+        <button
+          type="button"
+          class:list={["book", `st-${b.status}`, { lean: b.lean, on: b.id === first?.id }]}
+          style={`--bg:${b.color};--fg:${b.textColor};width:${b.width}px;height:${b.height}px`}
+          data-book={b.id}
+          data-status={b.status}
+          aria-pressed={b.id === first?.id ? "true" : "false"}
+          aria-controls={`bd-${b.id}`}
+          aria-label={`${b.title}, ${o.by} ${b.author} — ${o.status[b.status]}`}
+          data-track={`book:${b.id}`.slice(0, 64)}
+        >
+          <span class="spine">{b.title}</span>
+          <i class="mark" aria-hidden="true"></i>
+          {b.status === "reading" && b.progress != null && <i class="prog" style={`--p:${b.progress}%`} aria-hidden="true"></i>}
+        </button>
+      </li>
+    ))}
+    <li class="pile" aria-hidden="true"><span class="mug"></span><i style="width:118px;background:var(--warm)"></i><i style="width:132px;background:var(--accent)"></i><i style="width:124px;background:var(--accent-2)"></i></li>
+    <li class="plant" aria-hidden="true">
+      <svg width="46" height="44" viewBox="0 0 46 44"><path d="M23 44 C23 30 23 20 10 8 M23 44 C23 30 24 22 36 6 M23 44 C22 34 18 28 6 26 M23 44 C24 34 28 30 40 24" stroke="var(--mint)" stroke-width="3" fill="none" stroke-linecap="round" /><ellipse cx="10" cy="8" rx="7" ry="4" fill="var(--mint)" transform="rotate(-40 10 8)" /><ellipse cx="36" cy="6" rx="7" ry="4" fill="var(--mint)" transform="rotate(40 36 6)" /><ellipse cx="6" cy="26" rx="6" ry="3.5" fill="var(--mint)" transform="rotate(-15 6 26)" /><ellipse cx="40" cy="24" rx="6" ry="3.5" fill="var(--mint)" transform="rotate(15 40 24)" /></svg>
+      <i></i>
+    </li>
+  </ul>
+  <div class="plank" aria-hidden="true"></div>
+
+  <div class="details" aria-live="polite">
+    {books.map((b) => (
+      <article class="bd" id={`bd-${b.id}`} data-for={b.id} hidden={b.id !== first?.id}>
+        <div class="bd-cover" style={`--bg:${b.color};--fg:${b.textColor}`} aria-hidden="true"><span>{b.title}</span></div>
+        <div class="bd-body">
+          <div class="bd-meta">
+            <span class={`st st-${b.status}`}><i class={`dot st-${b.status}`}></i>{o.status[b.status]}</span>
+          </div>
+          <h4>{b.title}</h4>
+          <p class="bd-author">{o.by} {b.author}</p>
+
+          {b.status === "reading" && b.progress != null && (
+            <div class="bd-prog"><span class="bar"><span style={`width:${b.progress}%`}></span></span><small>{b.progress}% {o.progress}</small></div>
+          )}
+
+          {b.review ? (
+            <>
+              <p class="bd-label">{o.review} · {b.review.readTime}</p>
+              <p class="bd-text">{b.review.excerpt}</p>
+              <a class="btn primary sm" href={b.review.href} data-track={`book_review:${b.review.slug}`.slice(0, 64)}>
+                {o.reviewCta}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </a>
+            </>
+          ) : (
+            <>
+              <p class="bd-text">{b.note ?? o.statusText[b.status]}</p>
+              {b.status === "read" && <span class="bd-soon">{o.reviewSoon}</span>}
+            </>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+</div>
+
+<style>
+  .shelf { padding: 20px 22px 0; overflow: hidden; }
+  .shelf-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 12px; }
+  .shelf-head h3 { margin: 0; font-size: 20px; letter-spacing: -.02em; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px; }
+  .legend button { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font-size: 13px; font-weight: 600; cursor: pointer; }
+  .legend button span { font-family: var(--mono); color: var(--muted); font-weight: 500; }
+  .legend button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .legend button[aria-pressed="true"] span { color: inherit; opacity: .7; }
+  .shelf-hint { margin: 6px 0 12px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot.st-reading { background: var(--mint); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mint) 25%, transparent); }
+  .dot.st-read { background: var(--accent); }
+  .dot.st-queue { background: transparent; border: 2px solid var(--muted); }
+
+  .books { list-style: none; margin: 0; padding: 18px 6px 0; display: flex; align-items: flex-end; gap: 6px; height: 254px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .books::-webkit-scrollbar { display: none; }
+  .books > li { display: flex; align-items: flex-end; flex-shrink: 0; }
+
+  .book { position: relative; flex: 0 0 auto; padding: 14px 0; border: 0; border-radius: 5px 5px 2px 2px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: var(--bg); color: var(--fg); box-shadow: inset -5px 0 0 rgba(0, 0, 0, .12), inset 3px 0 0 rgba(255, 255, 255, .18); transition: transform .25s ease, opacity .25s ease, filter .25s ease; }
+  .book::before, .book::after { content: ""; position: absolute; left: 6px; right: 6px; height: 2px; background: currentColor; opacity: .35; }
+  .book::before { top: 12px; }
+  .book::after { bottom: 12px; }
+  .spine { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 700; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: calc(100% - 22px); }
+  .book:hover, .book:focus-visible, .book.on { transform: translateY(-12px); }
+  .book.on { box-shadow: inset -5px 0 0 rgba(0, 0, 0, .12), inset 3px 0 0 rgba(255, 255, 255, .18), 0 10px 18px -8px rgba(0, 0, 0, .35); }
+  .book.lean { transform: rotate(9deg); transform-origin: bottom left; margin-left: 8px; margin-right: 22px; }
+  .book.lean:hover, .book.lean:focus-visible, .book.lean.on { transform: rotate(9deg) translateY(-12px); }
+  .book.dim { opacity: .28; filter: grayscale(.6); }
+
+  /* marcador de status no topo da lombada */
+  .mark { position: absolute; top: -1px; right: 5px; width: 9px; height: 16px; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%); }
+  .st-reading .mark { background: var(--mint); height: 26px; }
+  .st-read .mark { background: var(--ink); }
+  .st-queue .mark { display: none; }
+  .st-queue { opacity: .92; }
+  .prog { position: absolute; left: 3px; bottom: 6px; width: 3px; height: calc(var(--p) * .8); max-height: 80%; border-radius: 2px; background: var(--mint); }
+
+  .pile { flex-direction: column; align-items: center; margin-left: auto; padding-left: 12px; }
+  .pile i { display: block; height: 20px; border-radius: 3px; box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .12); }
+  .mug { width: 30px; height: 32px; border-radius: 4px 4px 10px 10px; background: var(--accent-soft); border: 3px solid var(--accent); margin-bottom: 2px; position: relative; }
+  .mug::after { content: ""; position: absolute; right: -12px; top: 6px; width: 10px; height: 14px; border: 3px solid var(--accent); border-left: 0; border-radius: 0 8px 8px 0; }
+  .plant { margin-left: 18px; width: 46px; flex-direction: column; align-items: center; }
+  .plant i { display: block; width: 34px; height: 30px; border-radius: 4px 4px 10px 10px; background: var(--warm); }
+  @media (max-width: 480px) { .pile, .plant { display: none !important; } }
+  .plank { height: 14px; margin: 0 -22px; background: linear-gradient(var(--line), color-mix(in srgb, var(--line) 60%, var(--ink) 10%)); }
+
+  /* card de detalhe */
+  .details { margin: 0 -22px; padding: 18px 22px 22px; background: var(--paper2); }
+  .bd { display: grid; grid-template-columns: 64px 1fr; gap: 16px; align-items: start; animation: bd-in .25s ease; }
+  @keyframes bd-in { from { opacity: 0; transform: translateY(6px); } }
+  .bd-cover { width: 64px; aspect-ratio: 2/3; border-radius: 4px 8px 8px 4px; background: var(--bg); color: var(--fg); display: flex; align-items: flex-end; padding: 8px 6px; box-shadow: inset 5px 0 0 rgba(0, 0, 0, .15), 0 8px 16px -8px rgba(0, 0, 0, .4); }
+  .bd-cover span { font-size: 9px; font-weight: 800; line-height: 1.1; overflow-wrap: anywhere; hyphens: auto; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; }
+  .bd-body { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .bd-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .st { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); }
+  .bd h4 { margin: 2px 0 0; font-size: 19px; line-height: 1.2; letter-spacing: -.02em; }
+  .bd-author { margin: 0; font-size: 14px; color: var(--muted); }
+  .bd-prog { width: 100%; max-width: 260px; display: flex; align-items: center; gap: 10px; }
+  .bar { flex: 1; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+  .bar span { display: block; height: 100%; border-radius: 3px; background: var(--mint); }
+  .bd-prog small { font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .bd-label { margin: 6px 0 0; font-family: var(--mono); font-size: 12px; color: var(--accent-ink); }
+  .bd-text { margin: 0; font-size: 15px; color: var(--ink); line-height: 1.55; }
+  .bd .btn { margin-top: 6px; }
+  .bd-soon { font-family: var(--mono); font-size: 12px; color: var(--muted); padding: 3px 10px; border: 1px dashed var(--line); border-radius: 999px; }
+
+  @media (prefers-reduced-motion: reduce) { .bd { animation: none; } .book { transition: none; } }
+</style>
+
+<script>
+  function initShelf() {
+    const shelf = document.getElementById("shelf");
+    if (!shelf) return;
+    const books = Array.from(shelf.querySelectorAll<HTMLButtonElement>(".book"));
+    const cards = Array.from(shelf.querySelectorAll<HTMLElement>(".bd"));
+    const legend = Array.from(shelf.querySelectorAll<HTMLButtonElement>(".legend button"));
+    const hover = matchMedia("(hover: hover)").matches;
+
+    function select(id: string) {
+      books.forEach((b) => {
+        const on = b.dataset.book === id;
+        b.classList.toggle("on", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      cards.forEach((c) => { c.hidden = c.dataset.for !== id; });
+    }
+
+    books.forEach((b) => {
+      const pick = () => select(b.dataset.book!);
+      b.addEventListener("click", pick);
+      b.addEventListener("focus", pick);
+      if (hover) b.addEventListener("mouseenter", pick);
+    });
+
+    // Legenda: destaca só os livros do status escolhido (clicar de novo limpa)
+    let current = "";
+    legend.forEach((btn) => btn.addEventListener("click", () => {
+      current = current === btn.dataset.status ? "" : btn.dataset.status!;
+      legend.forEach((l) => l.setAttribute("aria-pressed", l.dataset.status === current ? "true" : "false"));
+      books.forEach((b) => b.classList.toggle("dim", !!current && b.dataset.status !== current));
+      const firstMatch = books.find((b) => !current || b.dataset.status === current);
+      if (firstMatch) select(firstMatch.dataset.book!);
+    }));
+  }
+
+  document.addEventListener("astro:page-load", initShelf);
+</script>

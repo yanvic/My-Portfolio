@@ -1,0 +1,23 @@
+---
+// Logo "Commits": dois branches (verde e pêssego) que se juntam num merge
+const { size = 28, id = "logo" } = Astro.props;
+const gid = `g-${id}`;
+---
+
+<svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+  <defs>
+    <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8F6BFF" />
+      <stop offset="1" stop-color="#4E2FC9" />
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="14" fill={`url(#${gid})`} />
+  <rect x="1.25" y="1.25" width="45.5" height="45.5" rx="12.75" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="1.5" />
+  <path d="M14 12 C14 21 24 20 24 28" fill="none" stroke="#5FD9B5" stroke-width="4.4" stroke-linecap="round" />
+  <path d="M34 12 C34 21 24 20 24 28" fill="none" stroke="#FFAE8F" stroke-width="4.4" stroke-linecap="round" />
+  <path d="M24 28 V37" stroke="#fff" stroke-width="4.4" stroke-linecap="round" />
+  <circle cx="14" cy="12" r="5.2" fill="#5FD9B5" />
+  <circle cx="34" cy="12" r="5.2" fill="#FFAE8F" />
+  <circle cx="24" cy="37" r="5.2" fill="#fff" />
+  <circle cx="24" cy="28" r="2.6" fill="#fff" />
+</svg>

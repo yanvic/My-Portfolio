@@ -1,0 +1,28 @@
+# row 1 = linguagens e frameworks, row 2 = dados, infra e ferramentas
+# logo = nome do arquivo em src/assets/techs (sem extensão .avif)
+- { id: typescript, order: 1, name: "TypeScript", logo: typescript, row: 1 }
+- { id: javascript, order: 2, name: "JavaScript", logo: javascript, row: 1 }
+- { id: react, order: 3, name: "React", logo: react, row: 1 }
+- { id: nextjs, order: 4, name: "Next.js", logo: nextjs, row: 1 }
+- { id: astro, order: 5, name: "Astro", logo: astro, row: 1 }
+- { id: nodejs, order: 6, name: "Node.js", logo: nodejs, row: 1 }
+- { id: nestjs, order: 7, name: "NestJS", logo: nestjs, row: 1 }
+- { id: go, order: 8, name: "Go", logo: go, row: 1 }
+- { id: rust, order: 9, name: "Rust", logo: rust, row: 1 }
+- { id: python, order: 10, name: "Python", logo: python, row: 1 }
+- { id: flutter, order: 11, name: "Flutter", logo: flutter, row: 1 }
+- { id: vuejs, order: 12, name: "Vue", logo: vuejs, row: 1 }
+- { id: tailwindcss, order: 13, name: "Tailwind", logo: tailwindcss, row: 1 }
+- { id: postgresql, order: 14, name: "PostgreSQL", logo: postgresql, row: 2 }
+- { id: mongodb, order: 15, name: "MongoDB", logo: mongodb, row: 2 }
+- { id: redis, order: 16, name: "Redis", logo: redis, row: 2 }
+- { id: docker, order: 17, name: "Docker", logo: docker, row: 2 }
+- { id: kubernetes, order: 18, name: "Kubernetes", logo: kubernetes, row: 2 }
+- { id: aws, order: 19, name: "AWS", logo: aws, row: 2 }
+- { id: linux, order: 20, name: "Linux", logo: linux, row: 2 }
+- { id: kafka, order: 21, name: "Kafka", logo: kafka, row: 2 }
+- { id: git, order: 23, name: "Git", logo: git, row: 2 }
+- { id: github, order: 24, name: "GitHub", logo: github, row: 2 }
+- { id: n8n, order: 25, name: "n8n", logo: n8n, row: 2 }
+- { id: figma, order: 26, name: "Figma", logo: figma, row: 2 }
+- { id: postman, order: 27, name: "Postman", logo: postman, row: 2 }

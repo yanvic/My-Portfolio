@@ -4,6 +4,7 @@ description: "Como implementar uma arquitetura de microserviços que realmente e
 date: 2024-11-20
 tag: "Arquitetura"
 readTime: "8 min"
+draft: true
 ---
 
 ## Por que Microserviços?

@@ -4,6 +4,7 @@ description: "Minha experiência migrando serviços de Node.js para Rust e os ga
 date: 2025-06-10
 tag: "Rust"
 readTime: "10 min"
+draft: true
 ---
 
 ## O contexto

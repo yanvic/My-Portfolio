@@ -1,0 +1,60 @@
+---
+import PostCard from "../blog/PostCard.astro";
+import { getPosts, tagKey, blogBase } from "../../lib/posts";
+
+const { t, lang } = Astro.props;
+const posts = (await getPosts()).slice(0, 4);
+const tags = [...new Map(posts.map((p) => [tagKey(p.data.tag), p.data.tag])).entries()];
+---
+
+{posts.length > 0 && (
+<section class="sec" id="blog">
+  <div class="wrap">
+    <div class="sec-head" data-animate="fade-up">
+      <h2>{t.blog.title}<span class="dot">.</span></h2>
+      <p>{t.blog.subtitle}</p>
+    </div>
+    <div class="blog-tools" data-animate="fade-up">
+      <div class="chips" id="tagf" role="group">
+        <button type="button" data-tag="" aria-pressed="true" data-track="blog_filter:all">{t.blog.all}</button>
+        {tags.map(([key, label]) => <button type="button" data-tag={key} aria-pressed="false" data-track={`blog_filter:${key}`}>{label}</button>)}
+      </div>
+      <a class="btn" href={blogBase(lang)} data-track="blog_all">{t.blog.viewAll}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </a>
+    </div>
+    <div class="posts-grid" id="posts" data-animate="fade-up" data-delay="100">
+      {posts.map((post, i) => <PostCard post={post} t={t} lang={lang} />)}
+    </div>
+  </div>
+</section>
+)}
+
+<style>
+  .blog-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: -8px 0 24px; }
+  @media (max-width: 760px) {
+    #tagf { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -20px; padding: 0 20px; width: calc(100% + 40px); }
+    #tagf::-webkit-scrollbar { display: none; }
+  }
+</style>
+
+<script>
+  function initBlogPreview() {
+    const cards = Array.from(document.querySelectorAll<HTMLElement>("#posts .post"));
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>("#tagf button"));
+    if (!cards.length) return;
+    function filter(tag: string) {
+      let first = true;
+      cards.forEach((c) => {
+        const ok = !tag || c.dataset.tag === tag;
+        c.hidden = !ok;
+        c.classList.toggle("feature", ok && first);
+        if (ok) first = false;
+      });
+      chips.forEach((b) => b.setAttribute("aria-pressed", (b.dataset.tag || "") === tag ? "true" : "false"));
+    }
+    chips.forEach((b) => b.addEventListener("click", () => filter(b.dataset.tag || "")));
+    filter("");
+  }
+  document.addEventListener("astro:page-load", initBlogPreview);
+</script>

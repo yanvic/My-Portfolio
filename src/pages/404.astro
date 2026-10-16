@@ -1,0 +1,37 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Logo from "../components/Logo.astro";
+import { translations } from "../i18n/translate.js";
+import "../styles/global.css";
+
+const t = translations.pt;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<html lang="pt-BR">
+  <head>
+    <BaseHead lang="pt" title={`404 — ${t.notFound.title}`} description={t.notFound.text} />
+  </head>
+  <body>
+    <div class="bg-aura" aria-hidden="true"></div>
+    <main class="nf">
+      <Logo size={56} id="nf" />
+      <p class="code">git checkout <span>404</span></p>
+      <h1>{t.notFound.title}</h1>
+      <p class="desc">{t.notFound.text}</p>
+      <div class="btns">
+        <a class="btn primary" href={`${base}/pt`}>{t.notFound.back}</a>
+        <a class="btn" href={`${base}/blog`}>Blog</a>
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  .nf { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; padding: 24px; }
+  .code { margin: 8px 0 0; font-family: var(--mono); color: var(--muted); }
+  .code span { color: var(--accent-ink); font-weight: 700; }
+  h1 { margin: 0; font-size: clamp(40px, 8vw, 80px); line-height: .95; letter-spacing: -.05em; font-weight: 800; }
+  .desc { margin: 0 0 8px; color: var(--muted); max-width: 40ch; }
+  .btns { justify-content: center; }
+</style>

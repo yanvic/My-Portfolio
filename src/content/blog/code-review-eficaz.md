@@ -4,6 +4,7 @@ description: "Práticas que transformam code reviews de burocracia em ferramenta
 date: 2025-01-15
 tag: "Desenvolvimento"
 readTime: "6 min"
+draft: true
 ---
 
 ## O problema com code reviews

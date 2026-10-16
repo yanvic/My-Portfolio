@@ -1,13 +1,13 @@
 import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
-
-import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://your-domain.com',
-  integrations: [react()],
-
-  vite: {
-    plugins: [tailwindcss()],
-  },
+  site: 'https://yanvic.github.io',
+  base: '/My-Portfolio',
+  output: 'static',
+  trailingSlash: 'ignore',
+  integrations: [
+    // a raiz só redireciona para /pt ou /en
+    sitemap({ filter: (page) => !page.endsWith('/My-Portfolio/') }),
+  ],
 });

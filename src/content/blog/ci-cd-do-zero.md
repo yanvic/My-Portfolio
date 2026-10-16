@@ -4,6 +4,7 @@ description: "Guia prático para montar um pipeline de CI/CD completo usando Git
 date: 2025-09-01
 tag: "DevOps"
 readTime: "12 min"
+draft: true
 ---
 
 ## O que vamos construir

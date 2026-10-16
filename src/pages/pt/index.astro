@@ -1,19 +1,23 @@
 ---
-import BaseLayout from "../../layouts/Layout.astro";
-import Hero from "../../components/Hero.astro";
-import Projects from "../../components/Projects.astro";
-import Article from "../../components/Article.astro";
-import Footer from "../../components/Footer.astro";
-import AboutSection from "../../components/sections/AboutSection.astro";
+import Layout from "../../layouts/Layout.astro";
+import Hero from "../../components/home/Hero.astro";
+import Projects from "../../components/home/Projects.astro";
+import About from "../../components/home/About.astro";
+import Career from "../../components/home/Career.astro";
+import Offscreen from "../../components/home/Offscreen.astro";
+import BlogPreview from "../../components/home/BlogPreview.astro";
+import Contact from "../../components/home/Contact.astro";
 import { translations } from "../../i18n/translate.js";
 
 const t = translations.pt;
 ---
 
-<BaseLayout lang="pt">
+<Layout lang="pt">
   <Hero t={t} />
-  <Projects t={t} />
-  <AboutSection t={t} />
-  <Article t={t} lang="pt" />
-  <Footer t={t} />
-</BaseLayout>
+  <Projects t={t} lang="pt" />
+  <About t={t} />
+  <Career t={t} lang="pt" />
+  <Offscreen t={t} lang="pt" />
+  <BlogPreview t={t} lang="pt" />
+  <Contact t={t} />
+</Layout>

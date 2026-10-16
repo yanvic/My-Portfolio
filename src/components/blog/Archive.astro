@@ -1,0 +1,94 @@
+---
+import PostCard from "./PostCard.astro";
+import { getPosts, tagKey } from "../../lib/posts";
+
+const { t } = Astro.props;
+const lang = t.locale === "en-US" ? "en" : "pt";
+const posts = await getPosts();
+const tags = [...new Map(posts.map((p) => [tagKey(p.data.tag), p.data.tag])).entries()];
+const b = t.blog;
+---
+
+<section class="archive" id="archive" data-i18n={JSON.stringify({ latest: b.latest, oldest: b.oldest, found1: b.found1, foundN: b.foundN, emptyTerm: b.emptyTerm, emptyTag: b.emptyTag })}>
+  <div class="a-head" data-animate="fade-up">
+    <div><h1>{b.title}<span class="dot">.</span></h1><p>{b.archiveSubtitle}</p></div>
+    {posts.length > 0 && <div class="stat"><b>{posts.length}</b>{b.published}</div>}
+  </div>
+  {posts.length === 0 ? (
+    <div class="soon" data-animate="fade-up" data-delay="100">
+      <b>{b.soonTitle}</b>
+      <p>{b.soonText}</p>
+      <a class="btn primary" href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/${lang}`}>{t.ui.portfolio}</a>
+    </div>
+  ) : (
+    <>
+    <div class="tools" data-animate="fade-up" data-delay="100">
+      <label class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
+        <input id="q" type="search" placeholder={b.search} aria-label={b.search} autocomplete="off" />
+      </label>
+      <div class="chips" id="tags" role="group">
+        <button type="button" data-tag="" aria-pressed="true" data-track="archive_filter:all">{b.all}</button>
+        {tags.map(([key, label]) => <button type="button" data-tag={key} aria-pressed="false" data-track={`archive_filter:${key}`}>{label}</button>)}
+      </div>
+      <label class="sort">{b.sort}
+        <select id="sort"><option value="new">{b.sortNew}</option><option value="old">{b.sortOld}</option></select>
+      </label>
+    </div>
+    <p class="result" id="result" aria-live="polite"></p>
+    <div class="posts-grid" id="posts" data-animate="fade-up" data-delay="200">
+      {posts.map((post) => <PostCard post={post} t={t} lang={lang} />)}
+    </div>
+    <div class="empty" id="empty" hidden>
+      <b>{b.emptyTitle}</b><span id="empty-msg"></span>
+      <button class="btn" type="button" id="clear">{b.clear}</button>
+    </div>
+    </>
+  )}
+</section>
+
+<script>
+  function initArchive() {
+    const section = document.getElementById("archive");
+    const grid = document.getElementById("posts");
+    if (!section || !grid) return; // sem artigos publicados
+    const i18n = JSON.parse(section.dataset.i18n || "{}");
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>(".post"));
+    const q = document.getElementById("q") as HTMLInputElement;
+    const sort = document.getElementById("sort") as HTMLSelectElement;
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>("#tags button"));
+    const result = document.getElementById("result")!;
+    const empty = document.getElementById("empty")!;
+    let tag = "";
+    const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+    function apply() {
+      const term = norm(q.value.trim());
+      const order = sort.value;
+      cards.sort((a, b) => (order === "new" ? b.dataset.date!.localeCompare(a.dataset.date!) : a.dataset.date!.localeCompare(b.dataset.date!)));
+      cards.forEach((c) => grid!.appendChild(c));
+      let shown = 0;
+      cards.forEach((c) => {
+        const ok = (!tag || c.dataset.tag === tag) && (!term || norm(c.dataset.text || "").includes(term));
+        c.hidden = !ok;
+        c.classList.toggle("feature", ok && shown === 0 && !term);
+        if (ok) shown++;
+        const flag = c.querySelector(".flag");
+        if (flag) flag.textContent = order === "new" ? i18n.latest : i18n.oldest;
+      });
+      chips.forEach((b) => b.setAttribute("aria-pressed", (b.dataset.tag || "") === tag ? "true" : "false"));
+      empty.hidden = shown > 0;
+      grid!.hidden = shown === 0;
+      document.getElementById("empty-msg")!.textContent = term ? i18n.emptyTerm.replace("{q}", q.value.trim()) : i18n.emptyTag;
+      result.textContent = shown === cards.length && !term ? "" : `${shown} ${shown === 1 ? i18n.found1 : i18n.foundN}`;
+    }
+
+    q.addEventListener("input", apply);
+    sort.addEventListener("change", apply);
+    chips.forEach((b) => b.addEventListener("click", () => { tag = b.dataset.tag || ""; apply(); }));
+    document.getElementById("clear")!.addEventListener("click", () => { q.value = ""; tag = ""; sort.value = "new"; apply(); q.focus(); });
+    apply();
+
+  }
+  document.addEventListener("astro:page-load", initArchive);
+</script>

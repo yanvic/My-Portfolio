@@ -1,0 +1,37 @@
+# "file" = nome do arquivo em src/assets/hobbies (avif, jpg, png ou webp)
+- id: musica
+  order: 1
+  file: photo8.avif
+  text:
+    pt: { chip: Música, alt: Yan tocando guitarra, caption: "guitarra nos fins de semana e no louvor 🎸", meta: música · hobby }
+    en: { chip: Music, alt: Yan playing guitar, caption: "guitar on weekends and at church 🎸", meta: music · hobby }
+- id: leitura
+  order: 2
+  file: photo5.avif
+  text:
+    pt: { chip: Leitura, alt: Livros de C. S. Lewis sobre a mesa, caption: "a coleção de C. S. Lewis que estou lendo 📚", meta: leitura · livros }
+    en: { chip: Reading, alt: C. S. Lewis books on a table, caption: "the C. S. Lewis collection I'm reading 📚", meta: reading · books }
+- id: futebol
+  order: 3
+  file: photo6.avif
+  text:
+    pt: { chip: Futebol, alt: Bola de futebol em campo à noite, caption: "pelada de quinta à noite ⚽", meta: esporte · futebol }
+    en: { chip: Football, alt: Football on a pitch at night, caption: "Thursday night match ⚽", meta: sport · football }
+- id: fotografia
+  order: 4
+  file: photo4.avif
+  text:
+    pt: { chip: Fotografia, alt: Pôr do sol na orla de Fortaleza, caption: "pôr do sol na orla 🌅", meta: fotografia · cidade }
+    en: { chip: Photography, alt: Sunset at the beach in Fortaleza, caption: "sunset on the waterfront 🌅", meta: photography · city }
+- id: games
+  order: 5
+  file: photo7.avif
+  text:
+    pt: { chip: Games, alt: Controle de videogame, caption: "modo descanso ativado 🎮", meta: games · console }
+    en: { chip: Games, alt: Game controller, caption: "rest mode on 🎮", meta: games · console }
+- id: pedais
+  order: 6
+  file: photo3.avif
+  text:
+    pt: { chip: Pedais, alt: Pedaleira de guitarra no chão, caption: "ajustando a pedaleira antes do ensaio 🎛️", meta: música · equipamento }
+    en: { chip: Pedalboard, alt: Guitar pedalboard on the floor, caption: "tweaking the pedalboard before rehearsal 🎛️", meta: music · gear }

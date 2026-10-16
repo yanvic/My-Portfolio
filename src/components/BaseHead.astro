@@ -1,0 +1,62 @@
+---
+import { ClientRouter } from "astro:transitions";
+import { otherLangPath } from "../lib/routes";
+
+const { lang, title, description, type = "website" } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : null;
+const ogImage = Astro.site ? new URL(`${import.meta.env.BASE_URL}og-image.png`, Astro.site) : null;
+const alt = otherLangPath(Astro.url.pathname, lang);
+const altURL = Astro.site ? new URL(alt.href, Astro.site) : null;
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="author" content="Yan Silva" />
+
+<meta property="og:type" content={type} />
+{canonicalURL && <meta property="og:url" content={canonicalURL} />}
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+{ogImage && <meta property="og:image" content={ogImage} />}
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content={lang === "pt" ? "pt_BR" : "en_US"} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{ogImage && <meta name="twitter:image" content={ogImage} />}
+{canonicalURL && <link rel="canonical" href={canonicalURL} />}
+{canonicalURL && <link rel="alternate" hreflang={lang === "pt" ? "pt-BR" : "en"} href={canonicalURL} />}
+{altURL && <link rel="alternate" hreflang={alt.lang === "pt" ? "pt-BR" : "en"} href={altURL} />}
+
+<link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+<link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} />
+<meta name="theme-color" content="#FBFBFB" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#222831" media="(prefers-color-scheme: dark)" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+
+<ClientRouter />
+
+<!-- Aplica o tema antes do CSS renderizar, evitando FOUC -->
+<script is:inline>
+  (function () {
+    var theme = null;
+    try { theme = localStorage.getItem("theme"); } catch (e) {}
+    if (theme !== "light" && theme !== "dark") {
+      theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute("data-theme", theme);
+    // Conteúdo animado só começa escondido com JS; se o script de revelação
+    // não rodar em 2,5 s (erro, bloqueio), tudo aparece sem animação.
+    var root = document.documentElement;
+    root.classList.add("reveal");
+    setTimeout(function () {
+      if (!root.hasAttribute("data-reveal-ready")) root.classList.remove("reveal");
+    }, 2500);
+  })();
+</script>

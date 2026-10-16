@@ -1,0 +1,40 @@
+# Do mais recente (order: 1) ao mais antigo. "branch: true" desenha o desvio laranja.
+- id: pleno
+  order: 1
+  hash: a3f9c21
+  year: "2026"
+  type: feat
+  ref: { pt: "HEAD → main", en: "HEAD → main" }
+  tags: [node, flutter, sql-server, typescript]
+  text:
+    pt: { title: desenvolvedor pleno, desc: "Novos desafios, mais responsabilidade técnica e participação em decisões de arquitetura." }
+    en: { title: mid-level developer, desc: "New challenges, more technical responsibility and a say in architecture decisions." }
+- id: freela
+  order: 2
+  hash: 7c1e0b4
+  year: "2025"
+  type: feat
+  branch: true
+  ref: { pt: freela, en: freelance }
+  tags: [rust, javascript, python, n8n]
+  text:
+    pt: { title: projetos com clientes diretos, desc: "Freelancer: contato direto com clientes e responsabilidade total sobre as entregas." }
+    en: { title: projects with direct clients, desc: "Freelancer: direct contact with clients and full ownership of deliveries." }
+- id: junior
+  order: 3
+  hash: e52d9a8
+  year: "2024"
+  type: feat
+  tags: [rust, html, css, javascript, python]
+  text:
+    pt: { title: desenvolvedor júnior, desc: "Aprendizado contínuo, novos projetos e consolidação das tecnologias." }
+    en: { title: junior developer, desc: "Continuous learning, new projects and consolidating the stack." }
+- id: estagio
+  order: 4
+  hash: 0b3f6e1
+  year: "2022"
+  type: init
+  tags: [flutter, go, vue, postgres]
+  text:
+    pt: { title: estágio, desc: "Primeiros passos no código, descobrindo a lógica por trás das aplicações." }
+    en: { title: internship, desc: "First steps in code, discovering the logic behind applications." }

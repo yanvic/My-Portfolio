@@ -1,0 +1,66 @@
+---
+import { getCollection } from "astro:content";
+
+const { t, lang } = Astro.props;
+const items = (await getCollection("career"))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map(({ data }) => ({ ...data, ...data.text[lang], ref: data.ref?.[lang] }));
+---
+
+<section class="sec" id="career">
+  <div class="wrap">
+    <div class="sec-head" data-animate="fade-up">
+      <h2>{t.career.title}<span class="dot">.</span></h2>
+      <p>{t.career.subtitle}</p>
+    </div>
+    <ol class="log card-box" data-animate="fade-up">
+      {items.map((c, i) => (
+        <li class:list={["commit", { head: i === 0, branch: c.branch }]}>
+          <div class="graph">
+            {c.branch && (
+              <svg viewBox="0 0 58 100" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M15.5 0 V100" stroke="var(--accent)" stroke-width="3" fill="none" vector-effect="non-scaling-stroke" />
+                <path d="M15.5 0 C15.5 12 43.5 8 43.5 22 V78 C43.5 92 15.5 88 15.5 100" stroke="var(--warm)" stroke-width="3" fill="none" vector-effect="non-scaling-stroke" />
+              </svg>
+            )}
+            <span class="node"></span>
+          </div>
+          <div class="cm">
+            <div class="meta">
+              <span class="hash">{c.hash}</span>
+              {c.ref && <span class={`ref ${c.branch ? "b" : "h"}`}>{c.ref}</span>}
+              <span>{c.year}</span>
+            </div>
+            <h3><span class="type">{c.type}:</span> {c.title}</h3>
+            <p>{c.desc}</p>
+            <div class="tags">{c.tags.map((tag) => <span class="tag">{tag}</span>)}</div>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .log { list-style: none; margin: 0; padding: 24px 24px 8px; }
+  .commit { display: grid; grid-template-columns: 58px 1fr; gap: 6px; }
+  .graph { position: relative; }
+  .graph::before { content: ""; position: absolute; left: 14px; top: 0; bottom: 0; width: 3px; background: linear-gradient(var(--accent), var(--accent-2)); border-radius: 2px; }
+  .commit:first-child .graph::before { top: 22px; }
+  .commit:last-child .graph::before { bottom: calc(100% - 26px); }
+  .node { position: absolute; left: 6px; top: 20px; width: 19px; height: 19px; border-radius: 50%; background: var(--paper); border: 4px solid var(--accent); }
+  .commit.head .node { background: var(--accent); box-shadow: 0 0 0 6px var(--accent-soft); }
+  .commit.branch .graph::before { display: none; }
+  .commit.branch svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .commit.branch .node { left: 34px; border-color: var(--warm); }
+  .cm { padding: 14px 0 30px; }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .hash { color: var(--accent-ink); font-weight: 700; }
+  .ref { padding: 2px 9px; border-radius: 999px; font-weight: 700; font-size: 12px; }
+  .ref.h { background: var(--ink); color: var(--bg); }
+  .ref.b { background: var(--warm); color: #2A1530; }
+  .cm h3 { margin: 8px 0 6px; font-family: var(--mono); font-size: clamp(16px, 2vw, 19px); font-weight: 700; line-height: 1.35; }
+  .cm h3 .type { color: var(--accent-ink); }
+  .cm p { margin: 0 0 10px; color: var(--muted); }
+  @media (max-width: 760px) { .log { padding: 18px 14px 4px; } .commit { grid-template-columns: 50px 1fr; } }
+</style>

@@ -1,0 +1,15 @@
+---
+// Raiz sempre abre em português; inglês só pelo botão PT/EN
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Yan Silva</title>
+    <meta http-equiv="refresh" content={`0; url=${base}/pt`} />
+    <link rel="canonical" href={`${base}/pt`} />
+    <script is:inline define:vars={{ base }}>window.location.replace(base + "/pt");</script>
+  </head>
+  <body></body>
+</html>
